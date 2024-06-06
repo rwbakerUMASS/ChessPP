@@ -3,8 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/home/rwbaker/Documents/GitHub/ChessPP"
+                "${workspaceFolder}/**"
+                // "/home/rwbaker/Documents/GitHub/ChessPP"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
