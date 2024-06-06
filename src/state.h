@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "bitboard.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ private:
 public:
     GameState(/* args */);
     ~GameState();
-    uint64_t pieces[12];
+    BitBoard pieces[12];
     void print();
     int material(int side);
     void reset();

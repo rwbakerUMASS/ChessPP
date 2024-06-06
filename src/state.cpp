@@ -22,59 +22,50 @@ const string symbols[12] =
 
 };
 
-int popCount(uint64_t piece)
-{
-    if (piece == 0)
-    {
-        return 0;
-    }
-    return popCount(piece / 2) + piece % 2;
-}
-
 GameState::GameState(/* args */)
 {
     for (int i = 0; i < 12; i++)
     {
-        this->pieces[i] = 0;
+        this->pieces[i].board = 0ULL;
     }
 }
 
 void GameState::reset()
 {
-    this->pieces[whitePawn] = 0x000000000000ff00;
-    this->pieces[blackPawn] = 0x00ff000000000000;
-    this->pieces[whiteKnight] = 0x0000000000000042;
-    this->pieces[blackKnight] = 0x4200000000000000;
-    this->pieces[whiteBishop] = 0x0000000000000024;
-    this->pieces[blackBishop] = 0x2400000000000000;
-    this->pieces[whiteRook] = 0x0000000000000081;
-    this->pieces[blackRook] = 0x8100000000000000;
-    this->pieces[whiteQueen] = 0x0000000000000008;
-    this->pieces[blackQueen] = 0x0800000000000000;
-    this->pieces[whiteKing] = 0x0000000000000010;
-    this->pieces[blackKing] = 0x1000000000000000;
+    this->pieces[whitePawn].board = 0x000000000000ff00;
+    this->pieces[blackPawn].board = 0x00ff000000000000;
+    this->pieces[whiteKnight].board = 0x0000000000000042;
+    this->pieces[blackKnight].board = 0x4200000000000000;
+    this->pieces[whiteBishop].board = 0x0000000000000024;
+    this->pieces[blackBishop].board = 0x2400000000000000;
+    this->pieces[whiteRook].board = 0x0000000000000081;
+    this->pieces[blackRook].board = 0x8100000000000000;
+    this->pieces[whiteQueen].board = 0x0000000000000008;
+    this->pieces[blackQueen].board = 0x0800000000000000;
+    this->pieces[whiteKing].board = 0x0000000000000010;
+    this->pieces[blackKing].board = 0x1000000000000000;
 }
 
 uint64_t GameState::piecesMask(int side)
 {
     uint64_t mask = 0;
-    mask |= this->pieces[whitePawn + side];
-    mask |= this->pieces[whiteKnight + side];
-    mask |= this->pieces[whiteBishop + side];
-    mask |= this->pieces[whiteRook + side];
-    mask |= this->pieces[whiteQueen + side];
-    mask |= this->pieces[whiteKing + side];
+    mask |= this->pieces[whitePawn + side].board;
+    mask |= this->pieces[whiteKnight + side].board;
+    mask |= this->pieces[whiteBishop + side].board;
+    mask |= this->pieces[whiteRook + side].board;
+    mask |= this->pieces[whiteQueen + side].board;
+    mask |= this->pieces[whiteKing + side].board;
     return mask;
 }
 
 int GameState::material(int side)
 {
     int value = 0;
-    value += popCount(this->pieces[whitePawn + side]);
-    value += 3 * popCount(this->pieces[whiteKnight + side]);
-    value += 3 * popCount(this->pieces[whiteBishop + side]);
-    value += 5 * popCount(this->pieces[whiteRook + side]);
-    value += 9 * popCount(this->pieces[whiteQueen + side]);
+    value += this->pieces[whitePawn + side].pieceCount();
+    value += 3 * this->pieces[whiteKnight + side].pieceCount();
+    value += 3 * this->pieces[whiteBishop + side].pieceCount();
+    value += 5 * this->pieces[whiteRook + side].pieceCount();
+    value += 9 * this->pieces[whiteQueen + side].pieceCount();
     return value;
 }
 
@@ -95,7 +86,7 @@ void GameState::print()
             // cout << square;
             for (int p = 0; p < 12; p++)
             {
-                if (this->pieces[p] & (1ULL << square))
+                if (this->pieces[p].checkSquare(square))
                 {
                     cout << symbols[p];
                     occupied = true;
