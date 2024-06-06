@@ -4,30 +4,9 @@
 #include <string>
 #include <iostream>
 #include "bitboard.h"
+#include "enums.h"
 
 using namespace std;
-
-enum side_enum
-{
-    white,
-    black
-};
-
-enum pieces_enum
-{
-    whitePawn,
-    blackPawn,
-    whiteKnight,
-    blackKnight,
-    whiteBishop,
-    blackBishop,
-    whiteRook,
-    blackRook,
-    whiteQueen,
-    blackQueen,
-    whiteKing,
-    blackKing
-};
 
 class GameState
 {

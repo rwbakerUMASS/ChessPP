@@ -5,23 +5,6 @@
 
 using namespace std;
 
-const string symbols[12] =
-    {
-        "P",
-        "p",
-        "N",
-        "n",
-        "B",
-        "b",
-        "R",
-        "r",
-        "Q",
-        "q",
-        "K",
-        "k",
-
-};
-
 GameState::GameState(/* args */)
 {
     for (int i = 0; i < 12; i++)
