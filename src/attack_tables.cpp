@@ -71,10 +71,12 @@ KnightMoveTable::KnightMoveTable(/* args */)
                 if (rank > 0)
                 {
                     this->moves[white][square].setSquare(square-10);
+                    this->moves[black][square].setSquare(square-10);
                 }
                 if (rank < 7)
                 {
                     this->moves[white][square].setSquare(square+6);
+                    this->moves[black][square].setSquare(square+6);
                 }
             }
             if (file < 6)
@@ -82,10 +84,12 @@ KnightMoveTable::KnightMoveTable(/* args */)
                 if (rank > 0)
                 {
                     this->moves[white][square].setSquare(square-6);
+                    this->moves[black][square].setSquare(square-6);
                 }
                 if (rank < 7)
                 {
                     this->moves[white][square].setSquare(square+10);
+                    this->moves[black][square].setSquare(square+10);
                 }
             }
             if (rank > 1)
@@ -93,10 +97,12 @@ KnightMoveTable::KnightMoveTable(/* args */)
                 if (file > 0)
                 {
                     this->moves[white][square].setSquare(square-17);   
+                    this->moves[black][square].setSquare(square-17);   
                 }
                 if (file < 7)
                 {
                     this->moves[white][square].setSquare(square-15);
+                    this->moves[black][square].setSquare(square-15);
                 }
             }
             if (rank < 6)
@@ -104,10 +110,12 @@ KnightMoveTable::KnightMoveTable(/* args */)
                 if (file > 0)
                 {
                     this->moves[white][square].setSquare(square+15);
+                    this->moves[black][square].setSquare(square+15);
                 }
                 if (file < 7)
                 {
                     this->moves[white][square].setSquare(square+17);
+                    this->moves[black][square].setSquare(square+17);
                 }
             }
         }

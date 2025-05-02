@@ -2,17 +2,17 @@
 #include <string>
 #include "state.h"
 #include "attack_tables.h"
-#include "pawn.h"
+#include "knight.h"
 using namespace std;
 
 int main()
 {
     GameState gs = GameState();
-    gs.pieces[whitePawn].setSquare(18);
-    gs.pieces[blackKnight].setSquare(27);
-    gs.pieces[blackKing].setSquare(26);
+    gs.pieces[whiteKnight].setSquare(18);
+    gs.pieces[blackKnight].setSquare(1);
+    gs.pieces[whiteKing].setSquare(3);
     gs.print();
-    Pawn pawn = Pawn(18);
-    pawn.get_moves(gs,white).print();
+    Knight k = Knight(18);
+    k.get_moves(gs,white).print();
     return 1;
 }
