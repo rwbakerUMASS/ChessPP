@@ -17,6 +17,11 @@ bool BitBoard::checkSquare(int square)
 
 void BitBoard::setSquare(int square)
 {
+    if (square < 0 || square > 63) 
+    {
+        cout << "WARN: BitBoard::setSquare(): Out of bounds! square:" << square << "\n";
+        return;
+    }
     this->board |= (1ULL << square);
 }
 
@@ -30,6 +35,18 @@ bool BitBoard::popSquare(int square)
 
     return occupied;
 }
+
+BitBoard BitBoard::intersect(BitBoard other)
+{
+    return BitBoard(this->board & other.board);
+}
+
+BitBoard BitBoard::join(BitBoard other)
+{
+    return BitBoard(this->board | other.board);
+}
+
+
 
 int BitBoard::pieceCount()
 {
@@ -69,7 +86,9 @@ void BitBoard::print()
         cout << "|" << "\n";
     }
     cout << "  +---+---+---+---+---+---+---+---+\n"
-         << "    A   B   C   D   E   F   G   H  \n" << endl;
+         << "    A   B   C   D   E   F   G   H  \n"
+         << "Count: " << pieceCount() << "\n"
+         << endl;
 }
 
 BitBoard::~BitBoard()

@@ -38,7 +38,55 @@ BitBoard PawnMoveTable::get_attacks(int square, int color)
     return this->attacks[color][square];
 }
 
-BitBoard PawnMoveTable::get_moves(int square, int color)
+BitBoard MoveTable::get_moves(int square, int color)
 {
     return this->moves[color][square];
+}
+
+KnightMoveTable::KnightMoveTable(/* args */)
+{
+    /*
+    Knight Moves:
+
+    +---+---+---+---+---+
+    |   |-17|   |-15|   |
+    +---+---+---+---+---+
+    |-10|   |   |   |-6 |
+    +---+---+---+---+---+
+    |   |   | X |   |   |
+    +---+---+---+---+---+
+    |+6 |   |   |   |+10|
+    +---+---+---+---+---+
+    |   |+15|   |+17|   |
+    +---+---+---+---+---+
+
+    */
+    for (int rank = 1; rank < 7; rank++)
+    {
+        for (int file = 1; file < 7; file++)
+        {
+            int square = rank * 8 + file;
+            if (file > 1)
+            {
+                this->moves[white][square].setSquare(square-10);
+                this->moves[white][square].setSquare(square+6);
+            }
+            if (file < 6)
+            {
+                this->moves[white][square].setSquare(square-6);
+                this->moves[white][square].setSquare(square+10);
+            }
+            if (rank > 1)
+            {
+                this->moves[white][square].setSquare(square-17);
+                this->moves[white][square].setSquare(square-15);
+            }
+            if (rank < 6)
+            {
+                this->moves[white][square].setSquare(square+17);
+                this->moves[white][square].setSquare(square+15);
+            }
+        }
+        
+    }
 }

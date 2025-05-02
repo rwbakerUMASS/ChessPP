@@ -17,6 +17,8 @@ public:
     bool checkSquare(int square);
     void setSquare(int square);
     bool popSquare(int square);
+    BitBoard intersect(BitBoard other);
+    BitBoard join(BitBoard other);
     void print();
     int pieceCount();
 };
