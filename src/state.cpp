@@ -29,7 +29,7 @@ void GameState::reset()
     this->pieces[blackKing].board = 0x1000000000000000;
 }
 
-uint64_t GameState::piecesMask(int side)
+BitBoard GameState::piecesMask(int side)
 {
     uint64_t mask = 0;
     mask |= this->pieces[whitePawn + side].board;
@@ -38,7 +38,25 @@ uint64_t GameState::piecesMask(int side)
     mask |= this->pieces[whiteRook + side].board;
     mask |= this->pieces[whiteQueen + side].board;
     mask |= this->pieces[whiteKing + side].board;
-    return mask;
+    return BitBoard(mask);
+}
+
+BitBoard GameState::piecesMask()
+{
+    uint64_t mask = 0;
+    mask |= this->pieces[whitePawn].board;
+    mask |= this->pieces[whiteKnight].board;
+    mask |= this->pieces[whiteBishop].board;
+    mask |= this->pieces[whiteRook].board;
+    mask |= this->pieces[whiteQueen].board;
+    mask |= this->pieces[whiteKing].board;
+    mask |= this->pieces[blackPawn].board;
+    mask |= this->pieces[blackBishop].board;
+    mask |= this->pieces[blackKnight].board;
+    mask |= this->pieces[blackRook].board;
+    mask |= this->pieces[blackQueen].board;
+    mask |= this->pieces[blackKing].board;
+    return BitBoard(mask);
 }
 
 int GameState::material(int side)

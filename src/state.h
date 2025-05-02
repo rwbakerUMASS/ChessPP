@@ -19,7 +19,8 @@ public:
     void print();
     int material(int side);
     void reset();
-    uint64_t piecesMask(int side);
+    BitBoard piecesMask(int side);
+    BitBoard piecesMask();
 };
 
 

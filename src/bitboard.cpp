@@ -46,7 +46,10 @@ BitBoard BitBoard::join(BitBoard other)
     return BitBoard(this->board | other.board);
 }
 
-
+BitBoard BitBoard::invert()
+{
+    return BitBoard(~(this->board));
+}
 
 int BitBoard::pieceCount()
 {

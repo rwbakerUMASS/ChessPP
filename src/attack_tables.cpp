@@ -110,7 +110,6 @@ KnightMoveTable::KnightMoveTable(/* args */)
                     this->moves[white][square].setSquare(square+17);
                 }
             }
-            this->moves[white][square].join(BitBoard(1ULL << square)).print();
         }
     }
 }

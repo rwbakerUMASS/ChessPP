@@ -20,6 +20,7 @@ public:
     bool popSquare(int square);
     BitBoard intersect(BitBoard other);
     BitBoard join(BitBoard other);
+    BitBoard invert();
     void print();
     int pieceCount();
 };
