@@ -61,32 +61,56 @@ KnightMoveTable::KnightMoveTable(/* args */)
     +---+---+---+---+---+
 
     */
-    for (int rank = 1; rank < 7; rank++)
+    for (int rank = 0; rank < 8; rank++)
     {
-        for (int file = 1; file < 7; file++)
+        for (int file = 0; file < 8; file++)
         {
             int square = rank * 8 + file;
             if (file > 1)
             {
-                this->moves[white][square].setSquare(square-10);
-                this->moves[white][square].setSquare(square+6);
+                if (rank > 0)
+                {
+                    this->moves[white][square].setSquare(square-10);
+                }
+                if (rank < 7)
+                {
+                    this->moves[white][square].setSquare(square+6);
+                }
             }
             if (file < 6)
             {
-                this->moves[white][square].setSquare(square-6);
-                this->moves[white][square].setSquare(square+10);
+                if (rank > 0)
+                {
+                    this->moves[white][square].setSquare(square-6);
+                }
+                if (rank < 7)
+                {
+                    this->moves[white][square].setSquare(square+10);
+                }
             }
             if (rank > 1)
             {
-                this->moves[white][square].setSquare(square-17);
-                this->moves[white][square].setSquare(square-15);
+                if (file > 0)
+                {
+                    this->moves[white][square].setSquare(square-17);   
+                }
+                if (file < 7)
+                {
+                    this->moves[white][square].setSquare(square-15);
+                }
             }
             if (rank < 6)
             {
-                this->moves[white][square].setSquare(square+17);
-                this->moves[white][square].setSquare(square+15);
+                if (file > 0)
+                {
+                    this->moves[white][square].setSquare(square+15);
+                }
+                if (file < 7)
+                {
+                    this->moves[white][square].setSquare(square+17);
+                }
             }
+            this->moves[white][square].join(BitBoard(1ULL << square)).print();
         }
-        
     }
 }
