@@ -21,6 +21,7 @@ public:
     BitBoard intersect(BitBoard other);
     BitBoard join(BitBoard other);
     BitBoard invert();
+    bool isEmpty();
     void print();
     int pieceCount();
 };

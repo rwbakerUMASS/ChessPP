@@ -51,6 +51,11 @@ BitBoard BitBoard::invert()
     return BitBoard(~(this->board));
 }
 
+bool BitBoard::isEmpty()
+{
+    return this->board == 0;
+}
+
 int BitBoard::pieceCount()
 {
     return this->pieceCountHelper(this->board);
