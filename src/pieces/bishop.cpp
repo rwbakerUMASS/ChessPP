@@ -1,13 +1,36 @@
 #include "bishop.h"
-#include "attack_tables.h"
 
 BitBoard Bishop::get_moves(GameState state, int color)
 {
-    /*TEMPORARY WILL HAVE TO FIND HOW I AM GOING TO GENERATE TABLES ONCE*/
-    KnightMoveTable kt = KnightMoveTable();
-
+    BitBoard moves;
+    BitBoard allPieces = state.piecesMask();
     BitBoard myPieces = state.piecesMask(color);
-    BitBoard otherPieces = state.piecesMask(!color);
-    BitBoard moves = kt.get_moves(this->square, color).intersect(myPieces.invert());
+    
+    int directions[4] = {-9, -7, 7, 9};
+
+    for (int d = 0; d < 4; ++d)
+    {
+        int step = directions[d];
+        int sq = this->square;
+
+        while (true)
+        {
+            int nextSq = sq + step;
+
+            // Edge of board checks
+            if (nextSq < 0 || nextSq >= 64) break;
+            int fileDelta = abs((nextSq % 8) - (sq % 8));
+            if (fileDelta != 1) break;
+
+            sq = nextSq;
+
+            if (myPieces.checkSquare(sq)) break;
+
+            moves.setSquare(sq);
+
+            if (allPieces.checkSquare(sq)) break;
+        }
+    }
+
     return moves;
 }

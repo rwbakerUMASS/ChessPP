@@ -2,7 +2,7 @@
 #include <string>
 #include "state.h"
 #include "attack_tables.h"
-#include "rook.h"
+#include "king.h"
 using namespace std;
 
 int main()
@@ -12,7 +12,7 @@ int main()
     gs.pieces[blackKnight].setSquare(22);
     gs.pieces[whiteRook].setSquare(20);
     gs.print();
-    Rook k = Rook(20);
+    King k = King(23);
     k.get_moves(gs,white).print();
     return 1;
 }

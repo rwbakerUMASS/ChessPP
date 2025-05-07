@@ -2,50 +2,32 @@
 
 BitBoard Rook::get_moves(GameState state, int color)
 {
-    int rank = this->square/8;
-    int file = this->square%8;
-    BitBoard row = BitBoard(255ULL << (rank * 8));
-    BitBoard col = BitBoard(72340172838076673ULL << file);
+    BitBoard moves;
     BitBoard allPieces = state.piecesMask();
     BitBoard myPieces = state.piecesMask(color);
-    row.popSquare(this->square);
-    if (!row.intersect(allPieces).isEmpty())
-    {
-        bool foundPiece = false;
-        for (int i = this->square-1; i%8 != 7; i--)
-        {
-            if(foundPiece)
-            {
-                row.popSquare(i);
-                continue;
-            }
-            if(allPieces.checkSquare(i))
-            {
-                foundPiece = true;
-                if(myPieces.checkSquare(i))
-                {
-                    row.popSquare(i);
-                }
-            }
-        }
+    
+    int directions[4] = {-8, 8, -1, 1};
 
-        foundPiece = false;
-        for (int i = this->square+1; i%8 != 0; i++)
+    for (int d = 0; d < 4; ++d)
+    {
+        int step = directions[d];
+        int sq = this->square;
+
+        while (true)
         {
-            if(foundPiece)
-            {
-                row.popSquare(i);
-                continue;
-            }
-            if(allPieces.checkSquare(i))
-            {
-                foundPiece = true;
-                if(myPieces.checkSquare(i))
-                {
-                    row.popSquare(i);
-                }
-            }
+            sq += step;
+
+            // Edge of board checks
+            if (sq < 0 || sq >= 64) break;
+            if ((step == -1 || step == 1) && (sq / 8 != this->square / 8)) break;
+
+            if (myPieces.checkSquare(sq)) break;
+
+            moves.setSquare(sq);
+
+            if (allPieces.checkSquare(sq)) break;
         }
     }
-    return row.join(col);
+
+    return moves;
 }

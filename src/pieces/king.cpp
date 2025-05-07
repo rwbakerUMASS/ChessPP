@@ -3,11 +3,20 @@
 
 BitBoard King::get_moves(GameState state, int color)
 {
-    /*TEMPORARY WILL HAVE TO FIND HOW I AM GOING TO GENERATE TABLES ONCE*/
-    KnightMoveTable kt = KnightMoveTable();
-
     BitBoard myPieces = state.piecesMask(color);
-    BitBoard otherPieces = state.piecesMask(!color);
-    BitBoard moves = kt.get_moves(this->square, color).intersect(myPieces.invert());
+    BitBoard moves;
+    int directions[8] = {-9, -8, -7, 1, 9, 8, 7, -1};
+    for (int d = 0; d < 8; ++d) {
+
+        int nextSq = this->square + directions[d];
+
+        if (nextSq < 0 || nextSq >= 64) continue;
+        int fileDelta = abs((nextSq % 8) - (this->square % 8));
+        if (fileDelta > 1) continue;
+        if (myPieces.checkSquare(nextSq)) continue;
+
+        moves.setSquare(nextSq);
+    }
+
     return moves;
 }
