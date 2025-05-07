@@ -10,33 +10,15 @@ enum side_enum
 
 enum pieces_enum
 {
-    whitePawn,
-    blackPawn,
-    whiteKnight,
-    blackKnight,
-    whiteBishop,
-    blackBishop,
-    whiteRook,
-    blackRook,
-    whiteQueen,
-    blackQueen,
-    whiteKing,
-    blackKing
+    pawn,
+    knight,
+    bishop,
+    rook,
+    queen,
+    king
 };
 
-const string symbols[12] =
-    {
-        "P",
-        "p",
-        "N",
-        "n",
-        "B",
-        "b",
-        "R",
-        "r",
-        "Q",
-        "q",
-        "K",
-        "k",
-
+const std::string symbols[2][6] = {
+    {"P", "N", "B", "R", "Q", "K"},
+    {"p", "n", "b", "r", "q", "k"} 
 };

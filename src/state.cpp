@@ -7,66 +7,63 @@ using namespace std;
 
 GameState::GameState(/* args */)
 {
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < 6; i++)
     {
-        this->pieces[i].board = 0ULL;
+        this->pieces[black][i].board = 0ULL;
+        this->pieces[white][i].board = 0ULL;
     }
 }
 
 void GameState::reset()
 {
-    this->pieces[whitePawn].board = 0x000000000000ff00;
-    this->pieces[blackPawn].board = 0x00ff000000000000;
-    this->pieces[whiteKnight].board = 0x0000000000000042;
-    this->pieces[blackKnight].board = 0x4200000000000000;
-    this->pieces[whiteBishop].board = 0x0000000000000024;
-    this->pieces[blackBishop].board = 0x2400000000000000;
-    this->pieces[whiteRook].board = 0x0000000000000081;
-    this->pieces[blackRook].board = 0x8100000000000000;
-    this->pieces[whiteQueen].board = 0x0000000000000008;
-    this->pieces[blackQueen].board = 0x0800000000000000;
-    this->pieces[whiteKing].board = 0x0000000000000010;
-    this->pieces[blackKing].board = 0x1000000000000000;
+    this->pieces[white][pawn].board = 0x000000000000ff00;
+    this->pieces[black][pawn].board = 0x00ff000000000000;
+    this->pieces[white][knight].board = 0x0000000000000042;
+    this->pieces[black][knight].board = 0x4200000000000000;
+    this->pieces[white][bishop].board = 0x0000000000000024;
+    this->pieces[black][bishop].board = 0x2400000000000000;
+    this->pieces[white][rook].board = 0x0000000000000081;
+    this->pieces[black][rook].board = 0x8100000000000000;
+    this->pieces[white][queen].board = 0x0000000000000008;
+    this->pieces[black][queen].board = 0x0800000000000000;
+    this->pieces[white][king].board = 0x0000000000000010;
+    this->pieces[black][king].board = 0x1000000000000000;
 }
 
-BitBoard GameState::piecesMask(int side)
+BitBoard GameState::getControlledSquares(int color)
 {
-    uint64_t mask = 0;
-    mask |= this->pieces[whitePawn + side].board;
-    mask |= this->pieces[whiteKnight + side].board;
-    mask |= this->pieces[whiteBishop + side].board;
-    mask |= this->pieces[whiteRook + side].board;
-    mask |= this->pieces[whiteQueen + side].board;
-    mask |= this->pieces[whiteKing + side].board;
+    for (int p = 0; p < 6; p++)
+    {
+
+    }
+}
+
+BitBoard GameState::piecesMask(int color)
+{
+    BitBoard mask;
+    for (int p = 0; p < 6; p++)
+    {
+        mask = mask.join(this->pieces[color][pawn]);
+    }
     return BitBoard(mask);
 }
 
 BitBoard GameState::piecesMask()
 {
-    uint64_t mask = 0;
-    mask |= this->pieces[whitePawn].board;
-    mask |= this->pieces[whiteKnight].board;
-    mask |= this->pieces[whiteBishop].board;
-    mask |= this->pieces[whiteRook].board;
-    mask |= this->pieces[whiteQueen].board;
-    mask |= this->pieces[whiteKing].board;
-    mask |= this->pieces[blackPawn].board;
-    mask |= this->pieces[blackBishop].board;
-    mask |= this->pieces[blackKnight].board;
-    mask |= this->pieces[blackRook].board;
-    mask |= this->pieces[blackQueen].board;
-    mask |= this->pieces[blackKing].board;
-    return BitBoard(mask);
+    BitBoard mask;
+    mask = mask.join(piecesMask(white));
+    mask = mask.join(piecesMask(black));
+    return mask;
 }
 
-int GameState::material(int side)
+int GameState::material(int color)
 {
     int value = 0;
-    value += this->pieces[whitePawn + side].pieceCount();
-    value += 3 * this->pieces[whiteKnight + side].pieceCount();
-    value += 3 * this->pieces[whiteBishop + side].pieceCount();
-    value += 5 * this->pieces[whiteRook + side].pieceCount();
-    value += 9 * this->pieces[whiteQueen + side].pieceCount();
+    value +=     this->pieces[color][pawn].pieceCount();
+    value += 3 * this->pieces[color][knight].pieceCount();
+    value += 3 * this->pieces[color][bishop].pieceCount();
+    value += 5 * this->pieces[color][rook].pieceCount();
+    value += 9 * this->pieces[color][queen].pieceCount();
     return value;
 }
 
@@ -85,13 +82,16 @@ void GameState::print()
             }
             cout << "| ";
             // cout << square;
-            for (int p = 0; p < 12; p++)
+            for (int c = 0; c < 2; c++)
             {
-                if (this->pieces[p].checkSquare(square))
+                for (int p = 0; p < 6; p++)
                 {
-                    cout << symbols[p];
-                    occupied = true;
-                    continue;
+                    if (this->pieces[c][p].checkSquare(square))
+                    {
+                        cout << symbols[c][p];
+                        occupied = true;
+                        continue;
+                    }
                 }
             }
             if (!occupied)

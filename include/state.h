@@ -15,11 +15,12 @@ private:
 public:
     GameState(/* args */);
     ~GameState();
-    BitBoard pieces[12];
+    BitBoard pieces[2][6];
     void print();
-    int material(int side);
+    int material(int color);
     void reset();
-    BitBoard piecesMask(int side);
+    BitBoard piecesMask(int color);
+    BitBoard getControlledSquares(int color);
     BitBoard piecesMask();
 };
 
