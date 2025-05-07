@@ -43,7 +43,7 @@ BitBoard GameState::piecesMask(int color)
     BitBoard mask;
     for (int p = 0; p < 6; p++)
     {
-        mask = mask.join(this->pieces[color][pawn]);
+        mask = mask.join(this->pieces[color][p]);
     }
     return BitBoard(mask);
 }
