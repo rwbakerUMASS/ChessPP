@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "state.h"
-#include "move_generator.h"
 using namespace std;
 
 int main()
@@ -11,7 +10,7 @@ int main()
     gs.pieces[black][knight].setSquare(22);
     gs.pieces[white][rook].setSquare(20);
     gs.print();
-    MoveGenerator mvgen = MoveGenerator();
-    mvgen.get_moves(king+1,24,white,gs).print();
+    gs.getControlledSquares(white).print();
+    gs.getControlledSquares(black).print();
     return 1;
 }
