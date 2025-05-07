@@ -32,10 +32,8 @@ void GameState::reset()
 
 BitBoard GameState::getControlledSquares(int color)
 {
-    for (int p = 0; p < 6; p++)
-    {
-
-    }
+    cout << "ERROR: FUNCTION NOT YET DEFINED: getControlledSquares("<<color<<")\n";
+    return BitBoard();
 }
 
 BitBoard GameState::piecesMask(int color)
