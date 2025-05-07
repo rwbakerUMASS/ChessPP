@@ -1,11 +1,12 @@
 #include "state.h"
+#include "move_generator.h"
 
 #include <string>
 #include <iostream>
 
 using namespace std;
 
-GameState::GameState(/* args */)
+GameState::GameState()
 {
     for (int i = 0; i < 6; i++)
     {
@@ -32,8 +33,19 @@ void GameState::reset()
 
 BitBoard GameState::getControlledSquares(int color)
 {
-    cout << "ERROR: FUNCTION NOT YET DEFINED: getControlledSquares("<<color<<")\n";
-    return BitBoard();
+    BitBoard controlled;
+    for (int p = 0; p < 6; p++)
+    {
+        BitBoard pieceBB = this->pieces[color][p];
+        for (int s = 0; s < 64; s++)
+        {
+            if (pieceBB.checkSquare(s))
+            {
+                controlled = controlled.join(GlobalMoveGenerator.get_moves(p,s,color,*this));
+            }
+        }
+    }
+    return controlled;
 }
 
 BitBoard GameState::piecesMask(int color)
