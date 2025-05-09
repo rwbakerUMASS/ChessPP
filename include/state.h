@@ -5,6 +5,7 @@
 #include <iostream>
 #include "bitboard.h"
 #include "enums.h"
+#include <vector>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ private:
     /* data */
 public:
     GameState(/* args */);
+    GameState(const GameState& other);
     ~GameState();
     BitBoard pieces[2][6];
     void print();
@@ -22,6 +24,14 @@ public:
     BitBoard piecesMask(int color);
     BitBoard getControlledSquares(int color);
     BitBoard piecesMask();
+    
+    /*
+    @brief Gets all possible moves in the current state
+
+    @param color Color whose turn it is
+    @return Vector of all possible resulting GameStates
+    */
+    vector<GameState> get_all_moves(int color);
 };
 
 

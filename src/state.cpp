@@ -15,6 +15,16 @@ GameState::GameState()
     }
 }
 
+GameState::GameState(const GameState& other) {
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            this->pieces[i][j] = other.pieces[i][j];
+        }
+    }
+}
+
 /*
 @brief Resets the game state to a standard starting chess position
 
@@ -155,6 +165,40 @@ void GameState::print()
          << "    A   B   C   D   E   F   G   H  \n"
          << "White Material: " << material(white) << "\n"
          << "Black Material: " << material(black) << endl;
+}
+
+vector<GameState> GameState::get_all_moves(int color)
+{
+    vector<GameState> allMoves;
+    for (int p = 0; p < 6; p++)
+    {
+        BitBoard pieceBB = this->pieces[color][p];
+        for (int s = 0; s < 64; s++)
+        {
+            if (pieceBB.checkSquare(s))
+            {
+                BitBoard tmpMoves = GlobalMoveGenerator.get_moves(p,s,color,*this);
+                for (int i = 0; i < 64; i++)
+                {
+                    if (tmpMoves.checkSquare(i))
+                    {
+                        GameState tmpState = GameState(*this);
+                        tmpState.pieces[color][p].popSquare(s);
+                        tmpState.pieces[color][p].setSquare(i);
+                        if (tmpState.piecesMask(!color).checkSquare(i))
+                        {
+                            for (int otherPiece = 0; otherPiece < 6; otherPiece++)
+                            {
+                                tmpState.pieces[!color][otherPiece].popSquare(i);
+                            }
+                        }
+                        allMoves.push_back(tmpState);
+                    }
+                }
+            }
+        }
+    }
+    return allMoves;
 }
 
 GameState::~GameState()
