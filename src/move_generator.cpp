@@ -13,7 +13,6 @@ MoveGenerator::~MoveGenerator()
 
 BitBoard MoveGenerator::get_pawn_moves(int square, int color, GameState state) const
 {
-    /*TEMPORARY WILL HAVE TO FIND HOW I AM GOING TO GENERATE TABLES ONCE*/
     static PawnMoveTable pt = PawnMoveTable();
 
     BitBoard allPieces = state.piecesMask();
@@ -29,7 +28,6 @@ BitBoard MoveGenerator::get_pawn_moves(int square, int color, GameState state) c
 
 BitBoard MoveGenerator::get_knight_moves(int square, int color, GameState state) const
 {
-    /*TEMPORARY WILL HAVE TO FIND HOW I AM GOING TO GENERATE TABLES ONCE*/
     static KnightMoveTable kt = KnightMoveTable();
 
     BitBoard myPieces = state.piecesMask(color);
@@ -132,6 +130,17 @@ BitBoard MoveGenerator::get_king_moves(int square, int color, GameState state) c
     return moves;
 }
 
+/*
+@brief Gets all moves of a piece, given the current game state
+
+@note This does not guarantee the move is legal, eg. checks, pins.
+
+@param type piece type
+@param square piece's current square
+@param color piece's color
+@param state Current state of the board
+@returns New BitBoard containing all moves
+*/
 BitBoard MoveGenerator::get_moves(int type, int square, int color, GameState state) const
 {
     BitBoard moves;
