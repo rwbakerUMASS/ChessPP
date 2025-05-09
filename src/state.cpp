@@ -15,6 +15,11 @@ GameState::GameState()
     }
 }
 
+/*
+@brief Resets the game state to a standard starting chess position
+
+@returns void
+*/
 void GameState::reset()
 {
     this->pieces[white][pawn].board = 0x000000000000ff00;
@@ -31,6 +36,17 @@ void GameState::reset()
     this->pieces[black][king].board = 0x1000000000000000;
 }
 
+/*
+@brief Gets all controlled squares by a given color
+
+@note This function does not currently work, it gets all possible moves, but does not take into account the fact that:
+    1.) Pieces can control squares where pieces are currently (defending)
+    2.) Pawns don't control where they can move.
+    3.) Pinned pieces
+
+@param color The color of the pieces (white=0, black=1)
+@return BitBoard representing all controlled squares on the board
+*/
 BitBoard GameState::getControlledSquares(int color)
 {
     BitBoard controlled;
@@ -48,6 +64,12 @@ BitBoard GameState::getControlledSquares(int color)
     return controlled;
 }
 
+/*
+@brief Gets a mask of all occupied squares of a given color
+
+@param color The color of the pieces (white=0, black=1)
+@return BitBoard representing all squares on the board occupied by that color
+*/
 BitBoard GameState::piecesMask(int color)
 {
     BitBoard mask;
@@ -58,6 +80,12 @@ BitBoard GameState::piecesMask(int color)
     return BitBoard(mask);
 }
 
+/*
+@brief Gets a mask of all occupied squares of both colors
+
+@param color The color of the pieces (white=0, black=1)
+@return BitBoard representing all occupied squares on the board
+*/
 BitBoard GameState::piecesMask()
 {
     BitBoard mask;
@@ -66,6 +94,12 @@ BitBoard GameState::piecesMask()
     return mask;
 }
 
+/*
+@brief Gets the material value of a given color
+
+@param color The color of the pieces (white=0, black=1)
+@return Integer value of the current material on the board
+*/
 int GameState::material(int color)
 {
     int value = 0;
@@ -77,6 +111,11 @@ int GameState::material(int color)
     return value;
 }
 
+/*
+@brief Prints a formatted representation of the current game state.
+
+@return void
+*/
 void GameState::print()
 {
     for (int rank = 0; rank < 8; rank++)
