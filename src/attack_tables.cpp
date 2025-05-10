@@ -32,26 +32,10 @@ PawnMoveTable::PawnMoveTable(/* args */)
         }
     }
 }
-
-/*
-@brief Gets all squares the given pawn could attack, regardless of legality
-
-@param square current square of pawn
-@param color color of pawn
-@returns New BitBoard containing all attacks
-*/
 BitBoard PawnMoveTable::get_attacks(int square, int color)
 {
     return this->attacks[color][square];
 }
-
-/*
-@brief Gets all squares the given pieces could move to, regardless of legality
-
-@param square current square of piece
-@param color color of piece
-@returns New BitBoard containing all moves
-*/
 BitBoard MoveTable::get_moves(int square, int color)
 {
     return this->moves[color][square];
