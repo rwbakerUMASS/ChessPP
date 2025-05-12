@@ -15,6 +15,16 @@ GameState::GameState()
     }
 }
 
+GameState::GameState(const GameState& other) {
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            this->pieces[i][j] = other.pieces[i][j];
+        }
+    }
+}
+
 void GameState::reset()
 {
     this->pieces[white][pawn].board = 0x000000000000ff00;
@@ -116,6 +126,71 @@ void GameState::print()
          << "    A   B   C   D   E   F   G   H  \n"
          << "White Material: " << material(white) << "\n"
          << "Black Material: " << material(black) << endl;
+}
+
+vector<GameState> GameState::get_all_moves(int color)
+{
+    vector<GameState> allMoves;
+    for (int p = 0; p < 6; p++)
+    {
+        BitBoard pieceBB = this->pieces[color][p];
+        for (int s = 0; s < 64; s++)
+        {
+            if (pieceBB.checkSquare(s))
+            {
+                BitBoard tmpMoves = GlobalMoveGenerator.get_moves(p,s,color,*this);
+                for (int i = 0; i < 64; i++)
+                {
+                    if (tmpMoves.checkSquare(i))
+                    {
+                        GameState tmpState = GameState(*this);
+                        tmpState.pieces[color][p].popSquare(s);
+                        tmpState.pieces[color][p].setSquare(i);
+                        if (tmpState.piecesMask(!color).checkSquare(i))
+                        {
+                            for (int otherPiece = 0; otherPiece < 6; otherPiece++)
+                            {
+                                tmpState.pieces[!color][otherPiece].popSquare(i);
+                            }
+                        }
+                        if(!tmpState.isCheck(color)) allMoves.push_back(tmpState);
+                    }
+                }
+            }
+        }
+    }
+    return allMoves;
+}
+
+bool GameState::isCheck(int color)
+{
+    // Leaving open the possibility for multiple kings (idk could be a fun spin on chess)
+    vector<int> kingSquares = this->pieces[color][king].findAllSet();
+    for (int i = 0; i < kingSquares.size(); i++)
+    {
+        if (this->isSquareAttacked(kingSquares[i],color)) return true;
+    }
+    return false;
+}
+
+bool GameState::isSquareAttacked(int square, int color)
+{
+    static PawnMoveTable pt;
+    for (int i = 0; i < 6; i++)
+    {
+        if(i==pawn)
+        {
+            BitBoard possiblePawnAttacks = pt.get_attacks(square, color); // reverse: from square's point of view
+            BitBoard pawns = this->pieces[!color][pawn];
+            if (possiblePawnAttacks.intersect(pawns).any()) return true;
+            continue;
+        }
+        // Trace back where attacks of that piece type could come from
+        BitBoard possibleSquares = GlobalMoveGenerator.get_moves(i,square,color,*this);
+        // If any of those squares are that piece type, it's attacked
+        if(possibleSquares.intersect(this->pieces[!color][i]).any()) return true;
+    }
+    return false;
 }
 
 GameState::~GameState()

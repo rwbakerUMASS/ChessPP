@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <stdint.h>
+#include <vector>
 using namespace std;
 
 class BitBoard
@@ -69,6 +70,21 @@ public:
     @returns true if BitBoard is empty, false otherwise
     */
     bool isEmpty();
+
+    /*
+    @brief Checks if there are any squares set on the BitBoard
+    
+    @returns true if BitBoard is not empty, false otherwise
+    */
+    bool any();
+
+
+    /*
+    @brief Finds all squares where the bitboard is set
+    
+    @returns Vector of all locations where a bit is set
+    */
+    vector<int> findAllSet();
 
     /*
     @brief Prints formatted BitBoard

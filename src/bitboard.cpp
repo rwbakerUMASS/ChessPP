@@ -56,6 +56,24 @@ bool BitBoard::isEmpty()
     return this->board == 0;
 }
 
+bool BitBoard::any()
+{
+    return !this->isEmpty();
+}
+
+vector<int> BitBoard::findAllSet()
+{
+    vector<int> allSet;
+    uint64_t tempBoard = this->board;
+    while(tempBoard != 0)
+    {
+        int nextSet = __builtin_ctzll(tempBoard);
+        allSet.push_back(nextSet);
+        tempBoard &= (tempBoard - 1);
+    }
+    return allSet;
+}
+
 int BitBoard::pieceCount()
 {
     return this->pieceCountHelper(this->board);
