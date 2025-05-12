@@ -166,7 +166,7 @@ bool GameState::isCheck(int color)
 {
     // Leaving open the possibility for multiple kings (idk could be a fun spin on chess)
     vector<int> kingSquares = this->pieces[color][king].findAllSet();
-    for (int i = 0; i < kingSquares.size(); i++)
+    for (size_t i = 0; i < kingSquares.size(); i++)
     {
         if (this->isSquareAttacked(kingSquares[i],color)) return true;
     }
