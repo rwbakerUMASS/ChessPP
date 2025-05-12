@@ -1,4 +1,5 @@
 #include "move_generator.h"
+#include "logger.h"
 
 const MoveGenerator GlobalMoveGenerator = MoveGenerator();
 
@@ -149,7 +150,7 @@ BitBoard MoveGenerator::get_moves(int type, int square, int color, GameState sta
         return get_king_moves(square, color, state);
     
     default:
-        cout << "ERROR: INVALID PIECE TYPE\n";
+        LOG_ERROR("MoveGenerator::get_moves(): INVALID PIECE TYPE!");
         exit(1);
     }
 }

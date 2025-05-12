@@ -1,4 +1,5 @@
 #include "bitboard.h"
+#include "logger.h"
 
 BitBoard::BitBoard(/* args */)
 {
@@ -19,7 +20,7 @@ void BitBoard::setSquare(int square)
 {
     if (square < 0 || square > 63) 
     {
-        cout << "WARN: BitBoard::setSquare(): Out of bounds! square:" << square << "\n";
+        LOG_ERROR("BitBoard::setSquare(): Out of bounds! square: "  + to_string(square));
         return;
     }
     this->board |= (1ULL << square);
