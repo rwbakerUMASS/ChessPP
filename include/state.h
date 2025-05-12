@@ -69,6 +69,13 @@ public:
     @return BitBoard representing all occupied squares on the board
     */
     BitBoard piecesMask();
+
+    /*
+    @brief Check if the current state is check for a given color
+
+    @param color Color who to check
+    @return True if color is in check, false otherwise
+    */
     bool isCheck(int color);
     
     /*
@@ -78,6 +85,14 @@ public:
     @return Vector of all possible resulting GameStates
     */
     vector<GameState> get_all_moves(int color);
+    
+    /*
+    @brief Check if square is attacked by any pieces
+
+    @param square Location of square to check
+    @param color Color whose turn it is
+    @return True if square is under attack, false otherwise
+    */
     bool isSquareAttacked(int square, int color);
 };
 
