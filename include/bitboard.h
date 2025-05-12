@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <stdint.h>
+#include <vector>
 using namespace std;
 
 class BitBoard
@@ -22,6 +23,8 @@ public:
     BitBoard join(BitBoard other);
     BitBoard invert();
     bool isEmpty();
+    bool any();
+    vector<int> findAllSet();
     void print();
     int pieceCount();
 };

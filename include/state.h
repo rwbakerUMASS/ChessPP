@@ -12,7 +12,7 @@ using namespace std;
 class GameState
 {
 private:
-    /* data */
+/* data */
 public:
     GameState(/* args */);
     GameState(const GameState& other);
@@ -24,6 +24,7 @@ public:
     BitBoard piecesMask(int color);
     BitBoard getControlledSquares(int color);
     BitBoard piecesMask();
+    bool isCheck(int color);
     
     /*
     @brief Gets all possible moves in the current state
@@ -32,6 +33,7 @@ public:
     @return Vector of all possible resulting GameStates
     */
     vector<GameState> get_all_moves(int color);
+    bool isSquareAttacked(int square, int color);
 };
 
 
