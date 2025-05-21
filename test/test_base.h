@@ -11,25 +11,35 @@ using namespace std::chrono;
 class TestCase {
     public:
         string name;
-        virtual bool run() = 0;
+        bool pass = true;
+        virtual void run() = 0;
+        void testFailed(string reason)
+        {
+            cout << this->name << ": fails because " << reason << endl;
+            this->pass = false;
+        }
 
 };
 
 class UnitTestSuite {
 public:
+    UnitTestSuite(string name)
+    {
+        this->name = name;
+    }
     void runAll()
     {
         int passedTests = 0;
         int failedTests = 0;
-        cout << "Starting SUITE" << endl;
+        cout << "Starting " << this->name << " tests" << endl;
         setSuiteStartTime();
         for(size_t i = 0; i < this->allTests.size(); i++)
         {
             TestCase* tc = this->allTests[i];
             cout << "Running test: " << tc->name << " ... ";
             setTestStartTime();
-            
-            if (tc->run())
+            tc->run();
+            if (tc->pass)
             {
                 cout << "Passed";
                 passedTests++;
@@ -54,6 +64,7 @@ public:
         this->allTests.push_back(tc);
     }
 private:
+    string name;
     vector<TestCase*> allTests;
     high_resolution_clock::time_point suiteStart;
     high_resolution_clock::time_point testStart;
