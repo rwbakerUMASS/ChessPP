@@ -36,17 +36,17 @@ public:
         for(size_t i = 0; i < this->allTests.size(); i++)
         {
             TestCase* tc = this->allTests[i];
-            cout << "Running test: " << tc->name << " ... ";
+            cout << endl << "Running test: " << tc->name << "... " << endl;
             setTestStartTime();
             tc->run();
             if (tc->pass)
             {
-                cout << "Passed";
+                cout << tc->name << ": Passed";
                 passedTests++;
             }
             else
             {
-                cout << "Failed";
+                cout << tc->name << ": Failed";
                 failedTests++;
             }
             milliseconds dur = duration_cast<milliseconds>(getTime() - testStart);
@@ -56,7 +56,7 @@ public:
         milliseconds dur = duration_cast<milliseconds>(getTime() - suiteStart);
 
         // Summary of tests
-        cout << "Tests Passed: " << passedTests << endl;
+        cout << endl << "Tests Passed: " << passedTests << endl;
         cout << "Tests Failed: " << failedTests << endl;
         cout << "Runtime: " << dur.count() << "ms" << endl;
     }
