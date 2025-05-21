@@ -4,24 +4,34 @@ use warnings;
 use File::Path qw(make_path);
 use File::Basename;
 
+
+my $test = 0;
+foreach my $arg (@ARGV) {
+    if ($arg == '--test') {
+        $test = 1;
+    }
+}
+
 my $timestamp = `date +\%m_\%d_\%H\%M\%S`;
 chomp($timestamp);
 
 # Directories
 my $src_dir     = 'src';
-my $pieces_dir  = 'src/pieces';
 my $include_dir = 'include';
 my $bin_dir     = 'bin';
 my $log_dir     = 'logs/build';
 my $log_file    = "$log_dir/build_$timestamp.log";
 my $output_file = "$bin_dir/ChessPP";
+my $test_dir    = "test";
+my $test_bin    = "$test_dir/bin";
 
 # Make sure bin/ and logs/ exist
 make_path($bin_dir) unless -d $bin_dir;
 make_path($log_dir) unless -d $log_dir;
+make_path($test_bin) unless -d $test_bin;
 
 # Collect all .cpp files from src/ and src/pieces/
-my @cpp_files = glob("$src_dir/*.cpp $pieces_dir/*.cpp");
+my @cpp_files = glob("$src_dir/*.cpp");
 
 # Compiler and flags
 my $compiler = 'g++';
@@ -48,4 +58,8 @@ if ($exit_code != 0) {
 }
 
 print "Build successful. Binary is at $output_file\n";
+
+if ($test) {
+    print "TODO PARSE JSON AND BUILD EACH TEST";
+}
 exit 0;

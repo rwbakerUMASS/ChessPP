@@ -1,0 +1,23 @@
+{
+    "state_test":
+    {
+        "include":["include"],
+        "cpp":[
+            "test/state_test.cpp",
+            "src/state.cpp",
+            "src/bitboard.cpp",
+            "src/move_generator.cpp",
+            "src/attack_tables.cpp",
+            "src/logger.cpp"
+        ]
+    },
+    "bitboard_test":
+    {
+        "include":["include"],
+        "cpp":[
+            "test/bitboard_test.cpp",
+            "src/bitboard.cpp",
+            "src/logger.cpp"
+        ]
+    }
+}
