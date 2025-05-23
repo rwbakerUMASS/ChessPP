@@ -59,6 +59,8 @@ public:
         cout << endl << "Tests Passed: " << passedTests << endl;
         cout << "Tests Failed: " << failedTests << endl;
         cout << "Runtime: " << dur.count() << "ms" << endl;
+        if (failedTests != 0) exit(1);
+        cout << "PASS!" << endl;
     }
     void addTestCase(TestCase* tc) {
         this->allTests.push_back(tc);
