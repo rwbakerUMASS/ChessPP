@@ -19,6 +19,9 @@ GameState::GameState()
     this->castlingRights[black][queen] = false;
     this->castlingRights[white][king] = false;
     this->castlingRights[white][queen] = false;
+    this->enPassant = BitBoard(0);
+    this->halfmove = 0;
+    this->fullmove = 0;
 }
 
 GameState::GameState(const GameState& other) {
@@ -34,6 +37,9 @@ GameState::GameState(const GameState& other) {
     this->castlingRights[black][queen] = other.castlingRights[black][queen];
     this->castlingRights[white][king] = other.castlingRights[white][king];
     this->castlingRights[white][queen] = other.castlingRights[white][queen];
+    this->enPassant = other.enPassant;
+    this->halfmove = other.halfmove;
+    this->fullmove = other.fullmove;
 }
 
 void GameState::reset()
@@ -56,6 +62,9 @@ void GameState::reset()
     this->castlingRights[black][queen] = true;
     this->castlingRights[white][king] = true;
     this->castlingRights[white][queen] = true;
+    this->enPassant = BitBoard(0);
+    this->halfmove = 0;
+    this->fullmove = 0;
 }
 
 BitBoard GameState::getControlledSquares(int color)
@@ -173,6 +182,18 @@ vector<GameState> GameState::get_all_moves(int color)
                                 tmpState.pieces[!color][otherPiece].popSquare(i);
                             }
                         }
+
+                        if (p == king)
+                        {
+                            tmpState.castlingRights[color][king_side] = false;
+                            tmpState.castlingRights[color][queen_side] = false;
+                        }
+                        if (p == rook)
+                        {
+                            if(s%8 == 0) tmpState.castlingRights[color][queen_side] = false;
+                            if(s%8 == 7) tmpState.castlingRights[color][king_side] = false;
+                        }
+
                         tmpState.turn = !color;
                         if(!tmpState.isCheck(color)) allMoves.push_back(tmpState);
                     }
@@ -288,10 +309,10 @@ void GameState::loadFen(string fen)
         LOG_ERROR("FEN input had invalid turn: " + flags[0]);
     }
 
-    if (flags[1].find("k") != string::npos) this->castlingRights[black][king] = true;
-    if (flags[1].find("q") != string::npos) this->castlingRights[black][queen] = true;
-    if (flags[1].find("K") != string::npos) this->castlingRights[white][king] = true;
-    if (flags[1].find("Q") != string::npos) this->castlingRights[white][queen] = true; 
+    if (flags[1].find("k") != string::npos) this->castlingRights[black][king_side] = true;
+    if (flags[1].find("q") != string::npos) this->castlingRights[black][queen_side] = true;
+    if (flags[1].find("K") != string::npos) this->castlingRights[white][king_side] = true;
+    if (flags[1].find("Q") != string::npos) this->castlingRights[white][queen_side] = true; 
 
     if (flags[2] != "-")
     {
@@ -321,9 +342,6 @@ void GameState::loadFen(string fen)
     {
         LOG_ERROR("FEN halfmove is not an integer: " + flags[4]);
     }
-    
-
-    this->print();
 }
 
 GameState::~GameState()

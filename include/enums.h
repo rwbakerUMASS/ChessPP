@@ -8,6 +8,12 @@ enum side_enum
     black
 };
 
+enum castle_side_enum
+{
+    king_side,
+    queen_side
+};
+
 enum pieces_enum
 {
     pawn,

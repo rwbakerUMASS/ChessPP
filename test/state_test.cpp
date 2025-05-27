@@ -166,22 +166,41 @@ public:
     }
 };
 
-class FenPiecePlacementTestTC : public TestCase {
-    public:
-        FenPiecePlacementTestTC() {
-            this->name = "FenPiecePlacementTestTC";
+class FenPiecePlacementTC : public TestCase {
+public:
+    FenPiecePlacementTC() {
+        this->name = "FenPiecePlacementTestTC";
+    }
+
+    void run() override {
+        GameState gs;
+        gs.loadFen("8/2p3k1/5p1p/2b1p3/1Pn1P3/2P2P2/1P4PP/6K1 w - - 2 38");
+        if (!gs.pieces[white][pawn].checkSquare(18)) this->testFailed("Missing white pawn at square 18 (c3)");
+        if (!gs.pieces[white][pawn].checkSquare(21)) this->testFailed("Missing white pawn at square 21 (f3)");
+        if (!gs.pieces[black][king].checkSquare(54)) this->testFailed("Missing black king at square 54 (g7)");
+        if (!gs.pieces[black][bishop].checkSquare(34)) this->testFailed("Missing black bishop at square 34 (c5)");
+        if (!gs.pieces[white][king].checkSquare(6)) this->testFailed("Missing white king at square 6 (g1)");
+    }
+};
+
+class LostCastlingRightsTC : public TestCase {
+public:
+    LostCastlingRightsTC() {
+        this->name = "LostCastlingRightsTC";
+    }
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][king].setSquare(4);
+        gs.pieces[white][rook].setSquare(0);
+        gs.pieces[white][rook].setSquare(7);
+        vector<GameState> moves = gs.get_all_moves(white);
+        if (moves.empty()) this->testFailed("this position is not checkmate, there are legal moves");
+        for(GameState& move: moves)
+        {
+            if(move.castlingRights[white][king_side] && move.castlingRights[white][queen_side]) this->testFailed("there should be no move where all castling rights are kept");
         }
-    
-        void run() override {
-            GameState gs;
-            gs.loadFen("8/2p3k1/5p1p/2b1p3/1Pn1P3/2P2P2/1P4PP/6K1 w - - 2 38");
-            if (!gs.pieces[white][pawn].checkSquare(17)) this->testFailed("Missing white pawn at square 17 (c3)");
-            if (!gs.pieces[white][pawn].checkSquare(22)) this->testFailed("Missing white pawn at square 22 (f3)");
-            if (!gs.pieces[black][king].checkSquare(14)) this->testFailed("Missing black king at square 14 (g7)");
-            if (!gs.pieces[black][bishop].checkSquare(27)) this->testFailed("Missing black bishop at square 27 (c5)");
-            if (!gs.pieces[white][king].checkSquare(62)) this->testFailed("Missing white king at square 62 (g1)");
-        }
-    };
+    }
+};
 
 int main() {
     UnitTestSuite ts = UnitTestSuite("Game State");
@@ -194,6 +213,8 @@ int main() {
     ts.addTestCase(new StalemateTC());
     ts.addTestCase(new BishopStopCheckTC());
     ts.addTestCase(new DoubleCheckTC());
+    ts.addTestCase(new FenPiecePlacementTC());
+    ts.addTestCase(new LostCastlingRightsTC());
     ts.runAll();
     return 0;
 }

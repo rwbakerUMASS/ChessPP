@@ -19,6 +19,7 @@ public:
     ~GameState();
     BitBoard pieces[2][6];
     bool turn;
+    // castlingRights[color][direction]
     bool castlingRights[2][2];
     BitBoard enPassant;
     int halfmove;
