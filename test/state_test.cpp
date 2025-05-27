@@ -166,6 +166,23 @@ public:
     }
 };
 
+class FenPiecePlacementTestTC : public TestCase {
+    public:
+        FenPiecePlacementTestTC() {
+            this->name = "FenPiecePlacementTestTC";
+        }
+    
+        void run() override {
+            GameState gs;
+            gs.loadFen("8/2p3k1/5p1p/2b1p3/1Pn1P3/2P2P2/1P4PP/6K1 w - - 2 38");
+            if (!gs.pieces[white][pawn].checkSquare(17)) this->testFailed("Missing white pawn at square 17 (c3)");
+            if (!gs.pieces[white][pawn].checkSquare(22)) this->testFailed("Missing white pawn at square 22 (f3)");
+            if (!gs.pieces[black][king].checkSquare(14)) this->testFailed("Missing black king at square 14 (g7)");
+            if (!gs.pieces[black][bishop].checkSquare(27)) this->testFailed("Missing black bishop at square 27 (c5)");
+            if (!gs.pieces[white][king].checkSquare(62)) this->testFailed("Missing white king at square 62 (g1)");
+        }
+    };
+
 int main() {
     UnitTestSuite ts = UnitTestSuite("Game State");
     ts.addTestCase(new QueenCheckTC());
