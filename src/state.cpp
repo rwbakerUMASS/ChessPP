@@ -172,6 +172,7 @@ vector<GameState> GameState::get_all_moves(int color)
                 {
                     if (tmpMoves.checkSquare(i))
                     {
+                        bool irreversible = false;
                         GameState tmpState = GameState(*this);
                         tmpState.pieces[color][p].popSquare(s);
                         tmpState.pieces[color][p].setSquare(i);
@@ -179,10 +180,15 @@ vector<GameState> GameState::get_all_moves(int color)
                         {
                             for (int otherPiece = 0; otherPiece < 6; otherPiece++)
                             {
+                                irreversible = true;
                                 tmpState.pieces[!color][otherPiece].popSquare(i);
                             }
                         }
 
+                        if (p == pawn)
+                        {
+                            irreversible = true;
+                        }
                         if (p == king)
                         {
                             tmpState.castlingRights[color][king_side] = false;
@@ -193,7 +199,8 @@ vector<GameState> GameState::get_all_moves(int color)
                             if(s%8 == 0) tmpState.castlingRights[color][queen_side] = false;
                             if(s%8 == 7) tmpState.castlingRights[color][king_side] = false;
                         }
-
+                        tmpState.halfmove = irreversible ? 0 : this->halfmove+1;
+                        tmpState.fullmove = (color == black) ? this->fullmove+1 : this->fullmove;
                         tmpState.turn = !color;
                         if(!tmpState.isCheck(color)) allMoves.push_back(tmpState);
                     }
