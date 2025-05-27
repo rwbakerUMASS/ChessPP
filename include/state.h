@@ -18,6 +18,11 @@ public:
     GameState(const GameState& other);
     ~GameState();
     BitBoard pieces[2][6];
+    bool turn;
+    bool castlingRights[2][2];
+    BitBoard enPassant;
+    int halfmove;
+    int fullmove;
 
     /*
     @brief Prints a formatted representation of the current game state.
@@ -94,6 +99,14 @@ public:
     @return True if square is under attack, false otherwise
     */
     bool isSquareAttacked(int square, int color);
+
+    /* 
+    @brief Load FEN string into game state
+
+    @param fen String in FEN format
+    @returns void
+    */
+    void loadFen(string fen);
 };
 
 

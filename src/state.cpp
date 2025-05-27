@@ -1,5 +1,6 @@
 #include "state.h"
 #include "move_generator.h"
+#include "logger.h"
 
 #include <string>
 #include <iostream>
@@ -13,6 +14,11 @@ GameState::GameState()
         this->pieces[black][i].board = 0ULL;
         this->pieces[white][i].board = 0ULL;
     }
+    this->turn = white;
+    this->castlingRights[black][king] = false;
+    this->castlingRights[black][queen] = false;
+    this->castlingRights[white][king] = false;
+    this->castlingRights[white][queen] = false;
 }
 
 GameState::GameState(const GameState& other) {
@@ -23,6 +29,11 @@ GameState::GameState(const GameState& other) {
             this->pieces[i][j] = other.pieces[i][j];
         }
     }
+    this->turn = other.turn;
+    this->castlingRights[black][king] = other.castlingRights[black][king];
+    this->castlingRights[black][queen] = other.castlingRights[black][queen];
+    this->castlingRights[white][king] = other.castlingRights[white][king];
+    this->castlingRights[white][queen] = other.castlingRights[white][queen];
 }
 
 void GameState::reset()
@@ -39,6 +50,12 @@ void GameState::reset()
     this->pieces[black][queen].board = 0x0800000000000000;
     this->pieces[white][king].board = 0x0000000000000010;
     this->pieces[black][king].board = 0x1000000000000000;
+
+    this->turn = white;
+    this->castlingRights[black][king] = true;
+    this->castlingRights[black][queen] = true;
+    this->castlingRights[white][king] = true;
+    this->castlingRights[white][queen] = true;
 }
 
 BitBoard GameState::getControlledSquares(int color)
@@ -91,7 +108,7 @@ void GameState::print()
 {
     for (int rank = 0; rank < 8; rank++)
     {
-        cout << "  +---+---+---+---+---+---+---+---+" << "\n";
+        cout << "  +---+---+---+---+---+---+---+---+" << endl;
         for (int file = 0; file < 8; file++)
         {
             int square = rank * 8 + file;
@@ -120,11 +137,14 @@ void GameState::print()
             }
             cout << " ";
         }
-        cout << "|" << "\n";
+        cout << "|" << endl;
     }
-    cout << "  +---+---+---+---+---+---+---+---+\n"
-         << "    A   B   C   D   E   F   G   H  \n"
-         << "White Material: " << material(white) << "\n"
+    cout << "  +---+---+---+---+---+---+---+---+" << endl
+         << "    A   B   C   D   E   F   G   H  " << endl
+         << "Turn: " << (this->turn ? "black" : "white") << endl
+         << "Halfmove: " << to_string(this->halfmove) << endl
+         << "Fullmove: " << to_string(this->fullmove) << endl
+         << "White Material: " << material(white) << endl
          << "Black Material: " << material(black) << endl;
 }
 
@@ -191,6 +211,118 @@ bool GameState::isSquareAttacked(int square, int color)
         if(possibleSquares.intersect(this->pieces[!color][i]).any()) return true;
     }
     return false;
+}
+
+void GameState::loadFen(string fen)
+{
+    size_t end_of_rows = fen.find(" ");
+    string state = fen.substr(end_of_rows+1);
+    fen = fen.substr(0,end_of_rows);
+
+    stringstream rows_ss(fen);
+    string rowStr;
+    vector<string> rows;
+    while (getline(rows_ss, rowStr, '/')) {
+        rows.push_back(rowStr);
+    }
+
+    int rank = 7;
+    for(string row : rows)
+    {
+        int file = 0;
+        for(char piece : row)
+        {
+            if (isdigit(piece)) {
+                file += piece - '0';
+                continue;
+            }
+
+            int sq = rank * 8 + file;
+
+            switch (piece) {
+                case 'p' :this->pieces[black][pawn].setSquare(sq); break;
+                case 'r' :this->pieces[black][rook].setSquare(sq); break;
+                case 'n' :this->pieces[black][knight].setSquare(sq); break;
+                case 'b' :this->pieces[black][bishop].setSquare(sq); break;
+                case 'q' :this->pieces[black][queen].setSquare(sq); break;
+                case 'k' :this->pieces[black][king].setSquare(sq); break;
+                case 'P' :this->pieces[white][pawn].setSquare(sq); break;
+                case 'R' :this->pieces[white][rook].setSquare(sq); break;
+                case 'N' :this->pieces[white][knight].setSquare(sq); break;
+                case 'B' :this->pieces[white][bishop].setSquare(sq); break;
+                case 'Q' :this->pieces[white][queen].setSquare(sq); break;
+                case 'K' :this->pieces[white][king].setSquare(sq); break;
+                default: LOG_ERROR("INVALID PIECE TYPE: " + string(1,piece));
+            }
+            file++;
+        }
+
+        if (file != 8) {
+            LOG_ERROR("FEN row had " + to_string(file) + " squares, expected 8.");
+        }
+
+        rank--;
+    }
+
+    if (rank != -1) {
+        LOG_ERROR("FEN had " + to_string(7 - rank) + " rows, expected 8.");
+    }
+
+    stringstream flags_ss(state);
+    string flagsStr;
+    vector<string> flags;
+    while (getline(flags_ss, flagsStr, ' ')) {
+        flags.push_back(flagsStr);
+    }
+
+    if(flags.size() != 5) LOG_ERROR("FEN input had " + to_string(flags.size()) + " flags, expected 5");
+    if (flags[0] == "w")
+    {
+        this->turn = white;
+    }
+    else if (flags[0] == "b")
+    {
+        this->turn = black;
+    } else {
+        LOG_ERROR("FEN input had invalid turn: " + flags[0]);
+    }
+
+    if (flags[1].find("k") != string::npos) this->castlingRights[black][king] = true;
+    if (flags[1].find("q") != string::npos) this->castlingRights[black][queen] = true;
+    if (flags[1].find("K") != string::npos) this->castlingRights[white][king] = true;
+    if (flags[1].find("Q") != string::npos) this->castlingRights[white][queen] = true; 
+
+    if (flags[2] != "-")
+    {
+        int file = flags[2][0] - 'a';
+        int rank = flags[2][1] - '1';
+        int sq = rank * 8 + file;
+        this->enPassant = BitBoard(0);
+        this->enPassant.setSquare(sq);
+    } else {
+        this->enPassant = BitBoard(0);
+    }
+
+    try
+    {
+        this->halfmove = stoi(flags[3]);
+    }
+    catch(const std::invalid_argument& e)
+    {
+        LOG_ERROR("FEN halfmove is not an integer: " + flags[3]);
+    }
+
+    try
+    {
+        this->fullmove = stoi(flags[4]);
+    }
+    catch(const std::invalid_argument& e)
+    {
+        LOG_ERROR("FEN halfmove is not an integer: " + flags[4]);
+    }
+    
+
+    this->print();
 }
 
 GameState::~GameState()
