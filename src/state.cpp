@@ -173,6 +173,7 @@ vector<GameState> GameState::get_all_moves(int color)
                                 tmpState.pieces[!color][otherPiece].popSquare(i);
                             }
                         }
+                        tmpState.turn = !color;
                         if(!tmpState.isCheck(color)) allMoves.push_back(tmpState);
                     }
                 }
