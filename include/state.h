@@ -90,7 +90,7 @@ public:
     @param color Color whose turn it is
     @return Vector of all possible resulting GameStates
     */
-    vector<GameState> get_all_moves(int color);
+    vector<GameState> get_all_moves(int color) const;
     
     /*
     @brief Check if square is attacked by any pieces

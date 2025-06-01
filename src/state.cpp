@@ -157,7 +157,7 @@ void GameState::print()
          << "Black Material: " << material(black) << endl;
 }
 
-vector<GameState> GameState::get_all_moves(int color)
+vector<GameState> GameState::get_all_moves(int color) const
 {
     vector<GameState> allMoves;
     for (int p = 0; p < 6; p++)

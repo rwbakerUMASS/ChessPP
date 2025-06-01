@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class RawMaterialEval : Evaluator
+class RawMaterialEval : public Evaluator
 {
 private:
 public:
