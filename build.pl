@@ -4,7 +4,7 @@ use warnings;
 use File::Path qw(make_path);
 use File::Basename;
 use JSON;
-
+use File::Find;
 
 my $test = 0;
 foreach my $arg (@ARGV) {
@@ -31,12 +31,25 @@ make_path($bin_dir) unless -d $bin_dir;
 make_path($log_dir) unless -d $log_dir;
 make_path($test_bin) unless -d $test_bin;
 
-# Collect all .cpp files from src/ and src/pieces/
-my @cpp_files = glob("$src_dir/*.cpp");
+# Collect all .cpp files from src/ 
+my @cpp_files;
+
+find(sub {
+    return unless -f $_;
+    return unless /\.cpp$/;
+    push @cpp_files, $File::Find::name;
+}, $src_dir);
 
 # Compiler and flags
 my $compiler = 'g++';
-my $flags    = "-I $include_dir -std=c++17 -Wall -Wextra";
+my $flags = "-I $include_dir ";
+find(sub {
+    if (-d $_ && $_ ne '.' && $_ ne '..') {
+        $flags = "$flags -I $File::Find::name ";
+    }
+}, $include_dir);
+
+$flags = "$flags -std=c++17 -Wall -Wextra";
 
 # Build command
 my $cmd = "$compiler @cpp_files $flags -o $output_file";
