@@ -38,7 +38,7 @@ public:
     @param color The color of the pieces (white=0, black=1)
     @return Integer value of the current material on the board
     */
-    int material(int color);
+    int material(int color) const;
 
     /*
     @brief Resets the game state to a standard starting chess position

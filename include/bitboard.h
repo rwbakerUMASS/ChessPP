@@ -10,7 +10,7 @@ using namespace std;
 class BitBoard
 {
 private:
-    int pieceCountHelper(uint64_t board);
+    int pieceCountHelper(uint64_t board) const;
 public:
     BitBoard();
     BitBoard(uint64_t board);
@@ -98,7 +98,7 @@ public:
     
     @returns Count of set bits
     */
-    int pieceCount();
+    int pieceCount() const;
 };
 
 #endif

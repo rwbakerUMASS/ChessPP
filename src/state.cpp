@@ -102,7 +102,7 @@ BitBoard GameState::piecesMask()
     return mask;
 }
 
-int GameState::material(int color)
+int GameState::material(int color) const
 {
     int value = 0;
     value +=     this->pieces[color][pawn].pieceCount();

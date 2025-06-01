@@ -75,12 +75,12 @@ vector<int> BitBoard::findAllSet()
     return allSet;
 }
 
-int BitBoard::pieceCount()
+int BitBoard::pieceCount() const
 {
     return this->pieceCountHelper(this->board);
 }
 
-int BitBoard::pieceCountHelper(uint64_t piece)
+int BitBoard::pieceCountHelper(uint64_t piece) const
 {
     if (piece == 0)
     {
