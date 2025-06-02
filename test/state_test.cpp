@@ -202,6 +202,148 @@ public:
     }
 };
 
+class KingIntoCheckTC : public TestCase {
+public:
+    KingIntoCheckTC() {
+        this->name = "KingIntoCheckTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][king].setSquare(4);   // e1
+        gs.pieces[black][rook].setSquare(6);   // g1
+
+        vector<GameState> moves = gs.get_all_moves(white);
+        for (const GameState& move : moves) {
+            if (move.pieces[white][king].checkSquare(5)) {
+                this->testFailed("King should not move into check");
+            }
+        }
+    }
+};
+
+class KnightJumpTC : public TestCase {
+public:
+    KnightJumpTC() {
+        this->name = "KnightJumpTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][knight].setSquare(1);   // b1
+        gs.pieces[white][pawn].setSquare(9);     // b2 (blocking path if not knight)
+        vector<GameState> moves = gs.get_all_moves(white);
+        bool moved = false;
+
+        for (const GameState& move : moves) {
+            if (!move.pieces[white][knight].checkSquare(18)) continue; // c3
+            moved = true;
+        }
+
+        if (!moved) this->testFailed("Knight should be able to jump to c3");
+    }
+};
+
+class PawnBlockedTC : public TestCase {
+public:
+    PawnBlockedTC() {
+        this->name = "PawnBlockedTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][pawn].setSquare(8);     // a2
+        gs.pieces[black][pawn].setSquare(16);    // a3
+        vector<GameState> moves = gs.get_all_moves(white);
+        if (moves.size() != 0) {
+            this->testFailed("Blocked pawn should not be able to move forward");
+        }
+    }
+};
+
+class PawnDoubleMoveTC : public TestCase {
+public:
+    PawnDoubleMoveTC() {
+        this->name = "PawnDoubleMoveTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][pawn].setSquare(8);   // a2
+        vector<GameState> moves = gs.get_all_moves(white);
+        bool doubleMove = false;
+
+        for (const GameState& move : moves) {
+            if (move.pieces[white][pawn].checkSquare(24)) { // a4
+                doubleMove = true;
+                break;
+            }
+        }
+
+        if (!doubleMove) this->testFailed("Pawn should be able to move two squares from starting rank");
+    }
+};
+
+class SimpleCaptureTC : public TestCase {
+public:
+    SimpleCaptureTC() {
+        this->name = "SimpleCaptureTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][rook].setSquare(0);     // a1
+        gs.pieces[black][pawn].setSquare(8);     // a2
+        vector<GameState> moves = gs.get_all_moves(white);
+        bool captured = false;
+
+        for (const GameState& move : moves) {
+            if (move.pieces[white][rook].checkSquare(8) &&
+                !move.pieces[black][pawn].checkSquare(8)) {
+                captured = true;
+            }
+        }
+
+        if (!captured) this->testFailed("Rook should be able to capture pawn");
+    }
+};
+
+class BasicCheckmateTC : public TestCase {
+public:
+    BasicCheckmateTC() {
+        this->name = "BasicCheckmateTC";
+    }
+
+    void run() override {
+        GameState gs = GameState();
+        gs.pieces[white][king].setSquare(0);
+        gs.pieces[black][rook].setSquare(7);
+        gs.pieces[black][rook].setSquare(15);
+
+        vector<GameState> moves = gs.get_all_moves(white);
+        if (!moves.empty()) this->testFailed("This is checkmate, no legal moves for white");
+    }
+};
+
+class StartingBoardMoveCountTC : public TestCase {
+public:
+    StartingBoardMoveCountTC() {
+        this->name = "StartingBoardMoveCountTC";
+    }
+
+    void run() override {
+        GameState gs;
+        gs.loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        vector<GameState> moves = gs.get_all_moves(white);
+
+        // Expected legal moves: 20 (16 pawn moves + 4 knight moves)
+        if (moves.size() != 20) {
+            this->testFailed("Expected 20 legal moves from the initial position, got " + std::to_string(moves.size()));
+        }
+    }
+};
+    
+
 int main() {
     UnitTestSuite ts = UnitTestSuite("Game State");
     ts.addTestCase(new QueenCheckTC());
@@ -215,6 +357,13 @@ int main() {
     ts.addTestCase(new DoubleCheckTC());
     ts.addTestCase(new FenPiecePlacementTC());
     ts.addTestCase(new LostCastlingRightsTC());
+    ts.addTestCase(new KingIntoCheckTC());
+    ts.addTestCase(new KnightJumpTC());
+    ts.addTestCase(new PawnBlockedTC());
+    ts.addTestCase(new PawnDoubleMoveTC());
+    ts.addTestCase(new SimpleCaptureTC());
+    ts.addTestCase(new BasicCheckmateTC());
+    ts.addTestCase(new StartingBoardMoveCountTC());
     ts.runAll();
     return 0;
 }

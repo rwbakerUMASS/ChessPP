@@ -20,8 +20,21 @@ BitBoard MoveGenerator::get_pawn_moves(int square, int color, GameState state) c
     BitBoard otherPieces = state.piecesMask(!color);
     BitBoard moves = pt.get_attacks(square, color).intersect(otherPieces);
     moves = moves.join(pt.get_moves(square, color).intersect(allPieces.invert()));
+    if (color == white && square >= 8 && square <= 15)
+    {
+        for (int i = 16; i < 24; i++)
+        {
+            if(allPieces.checkSquare(i)) moves.popSquare(i+8);
+        }
+    }
+    if (color == black && square >= 40 && square <= 47)
+    {
+        for (int i = 32; i < 40; i++)
+        {
+            if(allPieces.checkSquare(i)) moves.popSquare(i-8);
+        }
+    }
     /*
-    This does not take into account the first pawn double move being blocked!
     Will worry about en passant later
     */
     return moves;

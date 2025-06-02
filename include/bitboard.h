@@ -23,7 +23,7 @@ public:
     @param square index of the square to be checked
     @returns true if square is set, false otherwise
     */
-    bool checkSquare(int square);
+    bool checkSquare(int square) const;
 
     /*
     @brief Sets given square

@@ -11,7 +11,7 @@ BitBoard::BitBoard(uint64_t board)
     this->board = board;
 }
 
-bool BitBoard::checkSquare(int square)
+bool BitBoard::checkSquare(int square) const
 {
     return this->board & (1ULL << square);
 }
