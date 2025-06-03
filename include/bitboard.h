@@ -10,7 +10,7 @@ using namespace std;
 class BitBoard
 {
 private:
-    int pieceCountHelper(uint64_t board);
+    int pieceCountHelper(uint64_t board) const;
 public:
     BitBoard();
     BitBoard(uint64_t board);
@@ -23,7 +23,7 @@ public:
     @param square index of the square to be checked
     @returns true if square is set, false otherwise
     */
-    bool checkSquare(int square);
+    bool checkSquare(int square) const;
 
     /*
     @brief Sets given square
@@ -98,7 +98,7 @@ public:
     
     @returns Count of set bits
     */
-    int pieceCount();
+    int pieceCount() const;
 };
 
 #endif

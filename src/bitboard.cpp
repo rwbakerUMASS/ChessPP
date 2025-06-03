@@ -11,7 +11,7 @@ BitBoard::BitBoard(uint64_t board)
     this->board = board;
 }
 
-bool BitBoard::checkSquare(int square)
+bool BitBoard::checkSquare(int square) const
 {
     return this->board & (1ULL << square);
 }
@@ -75,12 +75,12 @@ vector<int> BitBoard::findAllSet()
     return allSet;
 }
 
-int BitBoard::pieceCount()
+int BitBoard::pieceCount() const
 {
     return this->pieceCountHelper(this->board);
 }
 
-int BitBoard::pieceCountHelper(uint64_t piece)
+int BitBoard::pieceCountHelper(uint64_t piece) const
 {
     if (piece == 0)
     {
