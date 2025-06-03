@@ -77,7 +77,7 @@ BitBoard GameState::getControlledSquares(int color)
         {
             if (pieceBB.checkSquare(s))
             {
-                controlled = controlled.join(GlobalMoveGenerator.get_moves(p,s,color,*this));
+                controlled.joinInPlace(GlobalMoveGenerator.get_moves(p,s,color,*this));
             }
         }
     }
@@ -89,7 +89,7 @@ BitBoard GameState::piecesMask(int color) const
     BitBoard mask;
     for (int p = 0; p < 6; p++)
     {
-        mask = mask.join(this->pieces[color][p]);
+        mask.joinInPlace(this->pieces[color][p]);
     }
     return BitBoard(mask);
 }
