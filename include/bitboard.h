@@ -55,6 +55,8 @@ public:
     */
     BitBoard join(BitBoard other);
 
+    void joinInPlace(const BitBoard& other);
+
     /*
     @brief Gets inverted BitBoard
     

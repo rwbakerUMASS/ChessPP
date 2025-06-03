@@ -47,6 +47,10 @@ BitBoard BitBoard::join(BitBoard other)
     return BitBoard(this->board | other.board);
 }
 
+void BitBoard::joinInPlace(const BitBoard& other) {
+    this->board |= other.board;
+}
+
 BitBoard BitBoard::invert()
 {
     return BitBoard(~(this->board));
