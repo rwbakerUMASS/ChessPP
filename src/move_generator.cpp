@@ -12,7 +12,7 @@ MoveGenerator::~MoveGenerator()
 
 }
 
-BitBoard MoveGenerator::get_pawn_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_pawn_moves(int square, int color, const GameState& state) const
 {
     static PawnMoveTable pt = PawnMoveTable();
 
@@ -40,7 +40,7 @@ BitBoard MoveGenerator::get_pawn_moves(int square, int color, GameState state) c
     return moves;
 }
 
-BitBoard MoveGenerator::get_knight_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_knight_moves(int square, int color, const GameState& state) const
 {
     static KnightMoveTable kt = KnightMoveTable();
 
@@ -50,7 +50,7 @@ BitBoard MoveGenerator::get_knight_moves(int square, int color, GameState state)
     return moves;
 }
 
-BitBoard MoveGenerator::get_bishop_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_bishop_moves(int square, int color, const GameState& state) const
 {
     BitBoard moves;
     BitBoard myPieces = state.piecesMask(color);
@@ -85,7 +85,7 @@ BitBoard MoveGenerator::get_bishop_moves(int square, int color, GameState state)
     return moves;
 }
 
-BitBoard MoveGenerator::get_rook_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_rook_moves(int square, int color, const GameState& state) const
 {
     BitBoard moves;
     BitBoard myPieces = state.piecesMask(color);
@@ -117,14 +117,14 @@ BitBoard MoveGenerator::get_rook_moves(int square, int color, GameState state) c
     return moves;
 }
 
-BitBoard MoveGenerator::get_queen_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_queen_moves(int square, int color, const GameState& state) const
 {
     BitBoard rookMoves = get_rook_moves(square, color, state);
     BitBoard bishopMoves = get_bishop_moves(square, color, state);
     return rookMoves.join(bishopMoves);
 }
 
-BitBoard MoveGenerator::get_king_moves(int square, int color, GameState state) const
+BitBoard MoveGenerator::get_king_moves(int square, int color, const GameState& state) const
 {
     BitBoard myPieces = state.piecesMask(color);
     BitBoard moves;
@@ -144,7 +144,7 @@ BitBoard MoveGenerator::get_king_moves(int square, int color, GameState state) c
     return moves;
 }
 
-BitBoard MoveGenerator::get_moves(int type, int square, int color, GameState state) const
+BitBoard MoveGenerator::get_moves(int type, int square, int color, const GameState& state) const
 {
     BitBoard moves;
     switch (type)
