@@ -174,37 +174,33 @@ vector<Move> GameState::get_all_moves(int color)
     for (int p = 0; p < 6; p++)
     {
         BitBoard pieceBB = this->pieces[color][p];
-        for (int s = 0; s < 64; s++)
+        vector<int> allFrom = pieceBB.findAllSet();
+        for (int from : allFrom)
         {
-            if (pieceBB.checkSquare(s))
+            BitBoard tmpMoves = GlobalMoveGenerator.get_moves(p,from,color,*this);
+            vector<int> allTo = tmpMoves.findAllSet();
+            for (int to : allTo)
             {
-                BitBoard tmpMoves = GlobalMoveGenerator.get_moves(p,s,color,*this);
-                for (int i = 0; i < 64; i++)
+                bool isCapture = false;
+                int captureType = -1;
+                if (this->piecesMask(!color).checkSquare(to))
                 {
-                    if (tmpMoves.checkSquare(i))
+                    for (int otherPiece = 0; otherPiece < 6; otherPiece++)
                     {
-                        bool isCapture = false;
-                        int captureType = -1;
-                        if (this->piecesMask(!color).checkSquare(i))
-                        {
-                            for (int otherPiece = 0; otherPiece < 6; otherPiece++)
-                            {
-                                if (this->pieces[!color][otherPiece].checkSquare(i)) {
-                                    isCapture = true;
-                                    captureType = otherPiece;
-                                    break;
-                                }
-                            }
+                        if (this->pieces[!color][otherPiece].checkSquare(to)) {
+                            isCapture = true;
+                            captureType = otherPiece;
+                            break;
                         }
-                        Move move(color,p,s,i,isCapture,captureType,false,false,-1);
-                        this->makeMove(move);
-                        if (!this->isCheck(color))
-                        {
-                            allMoves.push_back(move);
-                        }
-                        this->undoMove();
                     }
                 }
+                Move move(color,p,from,to,isCapture,captureType,false,false,-1);
+                this->makeMove(move);
+                if (!this->isCheck(color))
+                {
+                    allMoves.push_back(move);
+                }
+                this->undoMove();
             }
         }
     }

@@ -13,7 +13,8 @@ using namespace std;
 class GameState
 {
 private:
-/* data */
+    mutable BitBoard piecesMaskCache[2];
+    mutable bool isPiecesMaskCached[2];
 public:
     GameState(/* args */);
     GameState(const GameState& other);
