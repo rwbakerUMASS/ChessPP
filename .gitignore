@@ -1,2 +1,4 @@
 bin/
 logs/
+perf.data*
+main
