@@ -53,8 +53,8 @@ BitBoard MoveGenerator::get_knight_moves(int square, int color, GameState state)
 BitBoard MoveGenerator::get_bishop_moves(int square, int color, GameState state) const
 {
     BitBoard moves;
-    BitBoard allPieces = state.piecesMask();
     BitBoard myPieces = state.piecesMask(color);
+    BitBoard allPieces = state.piecesMask();
     
     int directions[4] = {-9, -7, 7, 9};
 
@@ -88,8 +88,8 @@ BitBoard MoveGenerator::get_bishop_moves(int square, int color, GameState state)
 BitBoard MoveGenerator::get_rook_moves(int square, int color, GameState state) const
 {
     BitBoard moves;
-    BitBoard allPieces = state.piecesMask();
     BitBoard myPieces = state.piecesMask(color);
+    BitBoard allPieces = state.piecesMask();
     
     int directions[4] = {-8, 8, -1, 1};
 

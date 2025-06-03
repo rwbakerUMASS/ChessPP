@@ -22,6 +22,9 @@ GameState::GameState()
     this->enPassant = BitBoard(0);
     this->halfmove = 0;
     this->fullmove = 0;
+
+    this->isPiecesMaskCached[0] = false;
+    this->isPiecesMaskCached[1] = false;
 }
 
 GameState::GameState(const GameState& other) {
@@ -40,6 +43,9 @@ GameState::GameState(const GameState& other) {
     this->enPassant = other.enPassant;
     this->halfmove = other.halfmove;
     this->fullmove = other.fullmove;
+
+    this->isPiecesMaskCached[0] = false;
+    this->isPiecesMaskCached[1] = false;
 }
 
 void GameState::reset()
@@ -65,6 +71,9 @@ void GameState::reset()
     this->enPassant = BitBoard(0);
     this->halfmove = 0;
     this->fullmove = 0;
+
+    this->isPiecesMaskCached[0] = false;
+    this->isPiecesMaskCached[1] = false;
 }
 
 BitBoard GameState::getControlledSquares(int color)
@@ -86,19 +95,21 @@ BitBoard GameState::getControlledSquares(int color)
 
 BitBoard GameState::piecesMask(int color) const
 {
+    if(this->isPiecesMaskCached[color]) return this->piecesMaskCache[color];
     BitBoard mask;
     for (int p = 0; p < 6; p++)
     {
         mask.joinInPlace(this->pieces[color][p]);
     }
-    return BitBoard(mask);
+    this->piecesMaskCache[color] = mask;
+    this->isPiecesMaskCached[color] = true;
+    return mask;
 }
 
 BitBoard GameState::piecesMask() const
 {
-    BitBoard mask;
-    mask = mask.join(piecesMask(white));
-    mask = mask.join(piecesMask(black));
+    BitBoard mask = piecesMask(white);
+    mask.joinInPlace(piecesMask(black));
     return mask;
 }
 
@@ -270,6 +281,9 @@ void GameState::makeMove(const Move& move)
     this->halfmove++;
     if (move.color == black) this->fullmove++;
     if (move.isCapture || move.pieceMoved == pawn) this->halfmove = 0;
+
+    this->isPiecesMaskCached[0] = false;
+    this->isPiecesMaskCached[1] = false;
 }
 
 GameState GameState::applyMove(const Move& move) const 
@@ -296,6 +310,9 @@ void GameState::undoMove()
     {
         this->pieces[!undo.color][undo.capturedPieceType].setSquare(undo.toSquare);
     }
+
+    this->isPiecesMaskCached[0] = false;
+    this->isPiecesMaskCached[1] = false;
 }
 
 void GameState::loadFen(string fen)
