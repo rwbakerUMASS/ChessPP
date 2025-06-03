@@ -5,6 +5,7 @@
 #include <iostream>
 #include "bitboard.h"
 #include "enums.h"
+#include "move.h"
 #include <vector>
 
 using namespace std;
@@ -24,6 +25,7 @@ public:
     BitBoard enPassant;
     int halfmove;
     int fullmove;
+    vector<UndoInfo> undoStack;
 
     /*
     @brief Prints a formatted representation of the current game state.
@@ -53,7 +55,7 @@ public:
     @param color The color of the pieces (white=0, black=1)
     @return BitBoard representing all squares on the board occupied by that color
     */
-    BitBoard piecesMask(int color);
+    BitBoard piecesMask(int color) const;
 
     /*
     @brief Gets all controlled squares by a given color
@@ -74,7 +76,7 @@ public:
     @param color The color of the pieces (white=0, black=1)
     @return BitBoard representing all occupied squares on the board
     */
-    BitBoard piecesMask();
+    BitBoard piecesMask() const;
 
     /*
     @brief Check if the current state is check for a given color
@@ -90,7 +92,7 @@ public:
     @param color Color whose turn it is
     @return Vector of all possible resulting GameStates
     */
-    vector<GameState> get_all_moves(int color) const;
+    vector<Move> get_all_moves(int color);
     
     /*
     @brief Check if square is attacked by any pieces
@@ -108,6 +110,12 @@ public:
     @returns void
     */
     void loadFen(string fen);
+
+    void makeMove(const Move& move);
+
+    GameState applyMove(const Move& move) const;
+
+    void undoMove();
 };
 
 

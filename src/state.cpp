@@ -84,7 +84,7 @@ BitBoard GameState::getControlledSquares(int color)
     return controlled;
 }
 
-BitBoard GameState::piecesMask(int color)
+BitBoard GameState::piecesMask(int color) const
 {
     BitBoard mask;
     for (int p = 0; p < 6; p++)
@@ -94,7 +94,7 @@ BitBoard GameState::piecesMask(int color)
     return BitBoard(mask);
 }
 
-BitBoard GameState::piecesMask()
+BitBoard GameState::piecesMask() const
 {
     BitBoard mask;
     mask = mask.join(piecesMask(white));
@@ -157,9 +157,9 @@ void GameState::print()
          << "Black Material: " << material(black) << endl;
 }
 
-vector<GameState> GameState::get_all_moves(int color) const
+vector<Move> GameState::get_all_moves(int color)
 {
-    vector<GameState> allMoves;
+    vector<Move> allMoves;
     for (int p = 0; p < 6; p++)
     {
         BitBoard pieceBB = this->pieces[color][p];
@@ -172,37 +172,26 @@ vector<GameState> GameState::get_all_moves(int color) const
                 {
                     if (tmpMoves.checkSquare(i))
                     {
-                        bool irreversible = false;
-                        GameState tmpState = GameState(*this);
-                        tmpState.pieces[color][p].popSquare(s);
-                        tmpState.pieces[color][p].setSquare(i);
-                        if (tmpState.piecesMask(!color).checkSquare(i))
+                        bool isCapture = false;
+                        int captureType = -1;
+                        if (this->piecesMask(!color).checkSquare(i))
                         {
                             for (int otherPiece = 0; otherPiece < 6; otherPiece++)
                             {
-                                irreversible = true;
-                                tmpState.pieces[!color][otherPiece].popSquare(i);
+                                if (this->pieces[!color][otherPiece].checkSquare(i)) {
+                                    isCapture = true;
+                                    captureType = otherPiece;
+                                    break;
+                                }
                             }
                         }
-
-                        if (p == pawn)
+                        Move move(color,p,s,i,isCapture,captureType,false,false,-1);
+                        this->makeMove(move);
+                        if (!this->isCheck(color))
                         {
-                            irreversible = true;
+                            allMoves.push_back(move);
                         }
-                        if (p == king)
-                        {
-                            tmpState.castlingRights[color][king_side] = false;
-                            tmpState.castlingRights[color][queen_side] = false;
-                        }
-                        if (p == rook)
-                        {
-                            if(s%8 == 0) tmpState.castlingRights[color][queen_side] = false;
-                            if(s%8 == 7) tmpState.castlingRights[color][king_side] = false;
-                        }
-                        tmpState.halfmove = irreversible ? 0 : this->halfmove+1;
-                        tmpState.fullmove = (color == black) ? this->fullmove+1 : this->fullmove;
-                        tmpState.turn = !color;
-                        if(!tmpState.isCheck(color)) allMoves.push_back(tmpState);
+                        this->undoMove();
                     }
                 }
             }
@@ -240,6 +229,73 @@ bool GameState::isSquareAttacked(int square, int color)
         if(possibleSquares.intersect(this->pieces[!color][i]).any()) return true;
     }
     return false;
+}
+
+void GameState::makeMove(const Move& move)
+{
+    this->undoStack.push_back(UndoInfo(
+        move.color,
+        move.fromSquare,
+        move.toSquare,
+        move.pieceMoved,
+        this->castlingRights,
+        this->halfmove,
+        this->fullmove,
+        this->enPassant,
+        move.isCapture ? move.capturedPieceType : -1,
+        move.toSquare,
+        move.promotionType != -1,
+        move.promotionType,
+        move.isEnPassant,
+        move.isEnPassant ? (move.color == white ? move.toSquare - 8 : move.toSquare + 8) : -1
+    ));
+
+    if (!this->pieces[move.color][move.pieceMoved].popSquare(move.fromSquare))
+    {
+        LOG_ERROR("Tried to move " + symbols[move.color][move.pieceMoved] +
+            " on square " + to_string(move.fromSquare) + "but there was no piece there!");
+    }
+
+    this->pieces[move.color][move.pieceMoved].setSquare(move.toSquare);
+
+    if (move.isCapture)
+    {
+        if (!this->pieces[!move.color][move.capturedPieceType].popSquare(move.toSquare))
+        {
+            LOG_ERROR("Move " + symbols[move.color][move.pieceMoved] +
+                " tried to take " + symbols[!move.color][move.capturedPieceType] +
+                " on square " + to_string(move.toSquare) + "but there was no piece there!");
+        }
+    }
+    this->halfmove++;
+    if (move.color == black) this->fullmove++;
+    if (move.isCapture || move.pieceMoved == pawn) this->halfmove = 0;
+}
+
+GameState GameState::applyMove(const Move& move) const 
+{
+    GameState new_state(*this);
+    new_state.makeMove(move);
+    return new_state;
+}
+
+void GameState::undoMove()
+{
+    UndoInfo undo = this->undoStack.back();
+    this->undoStack.pop_back();
+
+    this->fullmove = undo.fullmoveBefore;
+    this->halfmove = undo.halfmoveBefore;
+    
+    
+
+    this->pieces[undo.color][undo.pieceMoved].popSquare(undo.toSquare);
+    this->pieces[undo.color][undo.pieceMoved].setSquare(undo.fromSquare);
+
+    if (undo.capturedPieceType != -1)
+    {
+        this->pieces[!undo.color][undo.capturedPieceType].setSquare(undo.toSquare);
+    }
 }
 
 void GameState::loadFen(string fen)
