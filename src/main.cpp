@@ -17,8 +17,8 @@ int main()
     gs.loadFen("rnbqkbnr/pppp1ppp/8/4p3/4Q3/8/PPPP1PPP/RNB1KBNR w KQkq - 0 3");
     gs.print();
 
-    mm.depth=2;
-    gs = mm.selectMove(gs,white);
+    mm.depth=4;
+    gs.makeMove(mm.selectMove(gs,white));
     gs.print();
 
     // mm.depth=3;

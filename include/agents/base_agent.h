@@ -2,6 +2,7 @@
 #define CHESSPP_BASEAGENT_H
 
 #include "state.h"
+#include "move.h"
 #include "base_eval.h"
 
 using namespace std;
@@ -13,7 +14,7 @@ protected:
 public:
     Agent(Evaluator& eval) : evaluator(eval){}
     virtual ~Agent() = default;
-    virtual GameState selectMove(const GameState& state, bool color) = 0;
+    virtual Move selectMove(GameState& state, bool color) = 0;
 };
 
 #endif

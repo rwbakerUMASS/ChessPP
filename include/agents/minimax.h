@@ -8,11 +8,11 @@ using namespace std;
 class MiniMax : public Agent
 {
 private:
-    int search(const GameState& state, int depth, int alpha, int beta, bool color) const;
+    int search(GameState& state, int depth, int alpha, int beta, bool color) const;
 public:
     using Agent::Agent;
     int depth;
-    virtual GameState selectMove(const GameState& state, bool color) override;
+    virtual Move selectMove(GameState& state, bool color) override;
 };
 
 #endif

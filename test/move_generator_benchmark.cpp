@@ -2,6 +2,7 @@
 #include <chrono>
 #include "state.h"
 #include "enums.h"
+#include "move.h"
 using namespace std::chrono;
 
 uint64_t performance_test(GameState state, int depth, int color) {
@@ -9,9 +10,11 @@ uint64_t performance_test(GameState state, int depth, int color) {
         return 1;
     }
     uint64_t nodes = 0;
-    vector<GameState> moves = state.get_all_moves(color);
-    for(GameState& move : moves){
-        nodes += performance_test(move, depth-1,!color);
+    vector<Move> moves = state.get_all_moves(color);
+    for(Move& move : moves){
+        state.makeMove(move);
+        nodes += performance_test(state, depth-1,!color);
+        state.undoMove();
     }
     return nodes;
 }
