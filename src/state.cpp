@@ -84,7 +84,7 @@ BitBoard GameState::getControlledSquares(int color)
     return controlled;
 }
 
-BitBoard GameState::piecesMask(int color)
+BitBoard GameState::piecesMask(int color) const
 {
     BitBoard mask;
     for (int p = 0; p < 6; p++)
@@ -94,7 +94,7 @@ BitBoard GameState::piecesMask(int color)
     return BitBoard(mask);
 }
 
-BitBoard GameState::piecesMask()
+BitBoard GameState::piecesMask() const
 {
     BitBoard mask;
     mask = mask.join(piecesMask(white));

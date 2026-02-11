@@ -53,7 +53,7 @@ public:
     @param color The color of the pieces (white=0, black=1)
     @return BitBoard representing all squares on the board occupied by that color
     */
-    BitBoard piecesMask(int color);
+    BitBoard piecesMask(int color) const;
 
     /*
     @brief Gets all controlled squares by a given color
@@ -74,7 +74,7 @@ public:
     @param color The color of the pieces (white=0, black=1)
     @return BitBoard representing all occupied squares on the board
     */
-    BitBoard piecesMask();
+    BitBoard piecesMask() const;
 
     /*
     @brief Check if the current state is check for a given color

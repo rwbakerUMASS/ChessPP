@@ -13,12 +13,12 @@ using namespace std;
 class MoveGenerator
 {
 private:
-    BitBoard get_pawn_moves(int square, int color, GameState state) const;
-    BitBoard get_knight_moves(int square, int color, GameState state) const;
-    BitBoard get_bishop_moves(int square, int color, GameState state) const;
-    BitBoard get_rook_moves(int square, int color, GameState state) const;
-    BitBoard get_queen_moves(int square, int color, GameState state) const;
-    BitBoard get_king_moves(int square, int color, GameState state) const;
+    BitBoard get_pawn_moves(int square, int color, const GameState& state) const;
+    BitBoard get_knight_moves(int square, int color, const GameState& state) const;
+    BitBoard get_bishop_moves(int square, int color, const GameState& state) const;
+    BitBoard get_rook_moves(int square, int color, const GameState& state) const;
+    BitBoard get_queen_moves(int square, int color, const GameState& state) const;
+    BitBoard get_king_moves(int square, int color, const GameState& state) const;
 public:
     MoveGenerator();
     ~MoveGenerator();
@@ -34,7 +34,7 @@ public:
     @param state Current state of the board
     @returns New BitBoard containing all moves
     */
-    BitBoard get_moves(int type, int square, int color, GameState state) const;
+    BitBoard get_moves(int type, int square, int color, const GameState& state) const;
 };
 
 extern const MoveGenerator GlobalMoveGenerator;
