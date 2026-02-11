@@ -101,6 +101,8 @@ public:
     */
     bool isSquareAttacked(int square, int color);
 
+    string dumpFen();
+
     /* 
     @brief Load FEN string into game state
 

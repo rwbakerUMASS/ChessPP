@@ -13,6 +13,7 @@ protected:
 public:
     Agent(Evaluator& eval) : evaluator(eval){}
     virtual ~Agent() = default;
+    int timeLimit = 1000;
     virtual GameState selectMove(const GameState& state, bool color) = 0;
 };
 

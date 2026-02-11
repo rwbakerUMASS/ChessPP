@@ -242,6 +242,54 @@ bool GameState::isSquareAttacked(int square, int color)
     return false;
 }
 
+string GameState::dumpFen()
+{
+    string fen = "";
+    for (int rank = 7; rank >= 0; rank--)
+    {
+        int emptyCount = 0;
+        for (int file = 0; file < 8; file++)
+        {
+            int square = rank * 8 + file;
+            bool occupied = false;
+            for (int c = 0; c < 2; c++)
+            {
+                for (int p = 0; p < 6; p++)
+                {
+                    if (this->pieces[c][p].checkSquare(square))
+                    {
+                        if (emptyCount > 0)
+                        {
+                            fen += to_string(emptyCount);
+                            emptyCount = 0;
+                        }
+                        fen += symbols[c][p];
+                        occupied = true;
+                        continue;
+                    }
+                }
+            }
+            if (!occupied)
+            {
+                emptyCount++;
+            }
+        }
+        if (emptyCount > 0)
+        {
+            fen += to_string(emptyCount);
+        }
+        if (rank > 0)
+        {
+            fen += "/";
+        }
+    }
+
+    fen += " ";
+    fen += (this->turn == white) ? "w" : "b";
+    
+    return fen;
+}
+
 void GameState::loadFen(string fen)
 {
     size_t end_of_rows = fen.find(" ");
