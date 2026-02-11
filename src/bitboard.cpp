@@ -65,6 +65,7 @@ bool BitBoard::any()
 vector<int> BitBoard::findAllSet()
 {
     vector<int> allSet;
+    allSet.reserve(this->pieceCount());
     uint64_t tempBoard = this->board;
     while(tempBoard != 0)
     {
@@ -77,16 +78,7 @@ vector<int> BitBoard::findAllSet()
 
 int BitBoard::pieceCount() const
 {
-    return this->pieceCountHelper(this->board);
-}
-
-int BitBoard::pieceCountHelper(uint64_t piece) const
-{
-    if (piece == 0)
-    {
-        return 0;
-    }
-    return this->pieceCountHelper(piece / 2) + piece % 2;
+    return __builtin_popcountll(this->board);
 }
 
 void BitBoard::print()

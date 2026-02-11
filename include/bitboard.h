@@ -9,8 +9,6 @@ using namespace std;
 
 class BitBoard
 {
-private:
-    int pieceCountHelper(uint64_t board) const;
 public:
     BitBoard();
     BitBoard(uint64_t board);

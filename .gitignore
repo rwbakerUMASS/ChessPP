@@ -1,2 +1,4 @@
 bin/
 logs/
+callgrind.out*
+massif*

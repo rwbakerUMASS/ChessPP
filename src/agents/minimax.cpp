@@ -28,18 +28,18 @@ int MiniMax::search(const GameState& state, int depth, int alpha, int beta, bool
         int score = INT_MIN;
         for (GameState move : candidates)
         {
-            score = max(score,search(move,depth-1,alpha,beta,!color));
+            score = max(score, search(move, depth-1, alpha, beta, !color));
+            alpha = max(alpha, score);
             if (alpha >= beta) break;
-            alpha = max(alpha,score);
         }
         return score;
     } else {
         int score = INT_MAX;
         for (GameState move : candidates)
         {
-            score = min(score,search(move,depth-1,alpha,beta,!color));
-            if (beta <= alpha) break;
+            score = min(score, search(move, depth-1, alpha, beta, !color));
             beta = min(beta,score);
+            if (beta <= alpha) break;
         }
         return score;
     }
